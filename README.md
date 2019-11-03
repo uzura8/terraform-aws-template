@@ -14,8 +14,7 @@ Execute
 
 ```bash
 terraform init
-terraform plan
-terraform apply
+make deploy
 ```
 
 Destroy

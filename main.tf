@@ -1,6 +1,7 @@
 variable "aws_access_key" {}
 variable "aws_secret_key" {}
 variable "aws_region" {}
+variable "aws_lambda_region" {}
 variable "aws_db_username" {}
 variable "aws_db_password" {}
 variable "aws_key_name" {}
@@ -32,5 +33,11 @@ module "module_rds" {
   subnet_group_db_name  = "${module.module_vpc.subnet_group_db_name}"
   db_username           = "${var.aws_db_username}"
   db_password           = "${var.aws_db_password}"
+}
+
+# Lambda
+module "module_lambda" {
+  source     = "./modules/aws/lambda"
+  aws_region = "${var.aws_lambda_region}"
 }
 
