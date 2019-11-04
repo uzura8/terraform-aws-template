@@ -37,7 +37,9 @@ module "module_rds" {
 
 # Lambda
 module "module_lambda" {
-  source     = "./modules/aws/lambda"
-  aws_region = "${var.aws_lambda_region}"
+  source        = "./modules/aws/lambda"
+  access_key    = "${var.aws_access_key}"
+  secret_key    = "${var.aws_secret_key}"
+  lambda_region = "${var.aws_lambda_region}"
 }
 

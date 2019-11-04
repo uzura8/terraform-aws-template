@@ -1,9 +1,11 @@
-variable "aws_region" {
-  default = "us-west-2"
-}
+variable "access_key" {}
+variable "secret_key" {}
+variable "lambda_region" {}
 
 provider "aws" {
-  region = "${var.aws_region}"
+  access_key = "${var.access_key}"
+  secret_key = "${var.secret_key}"
+  region     = "${var.lambda_region}"
 }
 
 resource "aws_lambda_function" "gc_support_chat_lex_bot" {
