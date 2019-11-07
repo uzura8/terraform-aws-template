@@ -1,0 +1,31 @@
+{
+    "slots": [
+        {
+            "name": "SelectNum",
+            "slotConstraint": "Optional",
+            "slotType": "AMAZON.NUMBER",
+            "valueElicitationPrompt": {
+                "messages": [
+                    {
+                        "contentType": "PlainText",
+                        "content": "Which number?"
+                    }
+                ],
+                "maxAttempts": 2
+            },
+            "priority": 1,
+            "sampleUtterances": []
+        }
+    ],
+    "sampleUtterances": [
+        "Number {SelectNum}",
+        "{SelectNum}"
+    ],
+    "fulfillmentActivity": {
+        "type": "CodeHook",
+        "codeHook": {
+            "uri": "arn:aws:lambda:xxxx",
+            "messageVersion": "1.0"
+        }
+    }
+}

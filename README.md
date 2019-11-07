@@ -1,5 +1,7 @@
 # terraform-aws-template
 
+You have to install AWS-CLI, terraform before setup
+
 ### Installation
 
 Setup config.
@@ -20,5 +22,5 @@ make deploy
 Destroy
 
 ```bash
-terraform destroy
+make destroy
 ```

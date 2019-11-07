@@ -1,0 +1,29 @@
+{
+    "intents": [
+        {
+            "intentName": "FirstSupport",
+            "intentVersion": "$LATEST"
+        }
+    ],
+    "clarificationPrompt": {
+        "messages": [
+            {
+                "contentType": "PlainText",
+                "content": "Sorry, can you please repeat that?"
+            }
+        ],
+        "maxAttempts": 5
+    },
+    "abortStatement": {
+        "messages": [
+            {
+                "contentType": "PlainText",
+                "content": "Sorry, I could not understand. Goodbye."
+            }
+        ]
+    },
+    "locale": "en-US",
+    "idleSessionTTLInSeconds": 600,
+    "voiceId": "0",
+    "childDirected": false
+}

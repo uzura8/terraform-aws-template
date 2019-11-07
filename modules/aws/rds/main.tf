@@ -23,15 +23,18 @@ resource "aws_security_group_rule" "db" {
 }
 
 resource "aws_db_instance" "db" {
-  identifier              = "tf-dbinstance"
-  allocated_storage       = 5
-  engine                  = "mysql"
-  engine_version          = "5.7.26"
-  instance_class          = "db.t2.micro"
-  storage_type            = "gp2"
-  username                = "${var.db_username}"
-  password                = "${var.db_password}"
-  backup_retention_period = 1
-  vpc_security_group_ids  = ["${aws_security_group.this.id}"]
-  db_subnet_group_name    = "${var.subnet_group_db_name}"
+  identifier                = "tf-dbinstance"
+  allocated_storage         = 5
+  engine                    = "mysql"
+  engine_version            = "5.7.26"
+  instance_class            = "db.t2.micro"
+  storage_type              = "gp2"
+  username                  = "${var.db_username}"
+  password                  = "${var.db_password}"
+  backup_retention_period   = 1
+  vpc_security_group_ids    = ["${aws_security_group.this.id}"]
+  db_subnet_group_name      = "${var.subnet_group_db_name}"
+  final_snapshot_identifier = false
+  skip_final_snapshot       = true
+  apply_immediately         = true
 }
