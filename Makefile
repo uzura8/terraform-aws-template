@@ -2,11 +2,11 @@ CD = cd ./
 
 deploy:
 	@${CD} && \
-		sh ./build.sh && \
+		sh bin/build_lambda_file.sh && \
 		terraform apply && \
-		sh lex_deploy.sh
+		sh bin/lex_deploy.sh
 
 destroy:
 	@${CD} && \
-		sh ./lex_destroy.sh && \
+		sh bin/lex_destroy.sh && \
 		terraform destroy
