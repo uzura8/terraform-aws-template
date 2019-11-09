@@ -1,7 +1,15 @@
-#!/bin/sh
+#!/bin/bash
 
-GIT_URL="https://github.com/uzura8/gc-support-chat-lex-bot.git"
-DIR_NAME="workspace"
+# include common file
+COMMON_FILE="`dirname $0`/common.sh"
+if [ ! -f $COMMON_FILE ]; then
+  echo "Not found common file : ${COMMON_FILE}" ; exit 1
+fi
+. $COMMON_FILE
+
+
+GIT_URL=`tf_conf lambda_git_repo`
+DIR_NAME=`tf_conf lambda_tmp_dir_name`
 
 cd var
 
