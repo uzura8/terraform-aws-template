@@ -2,10 +2,12 @@
 aws_profile = ""
 aws_region  = "ap-northeast-1"
 
+# EC2
+key_name = "greatefulchat"
+
 # RDS
 aws_db_username = ""
 aws_db_password = ""
-aws_key_name    = ""
 
 # Lambda
 aws_lambda_region = "us-west-2"

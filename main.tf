@@ -3,11 +3,17 @@ variable "aws_region" {}
 variable "aws_lambda_region" {}
 variable "aws_db_username" {}
 variable "aws_db_password" {}
-variable "aws_key_name" {}
+variable "key_name" {}
 
 provider "aws" {
   profile = "${var.aws_profile}"
   region  = "${var.aws_region}"
+}
+
+# Local
+module "module_keygen" {
+  source   = "./modules/local/keygen"
+  key_name = "${var.key_name}"
 }
 
 # VPC
@@ -20,7 +26,8 @@ module "module_ec2" {
   source               = "./modules/aws/ec2"
   vpc_id               = "${module.module_vpc.vpc_id}"
   subnet_public_web_id = "${module.module_vpc.subnet_public_web_id}"
-  aws_key_name         = "${var.aws_key_name}"
+  key_name             = "${var.key_name}"
+  public_key_value     = "${module.module_keygen.public_key_openssh}"
 }
 
 # RDS

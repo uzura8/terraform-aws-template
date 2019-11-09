@@ -1,6 +1,12 @@
 variable "vpc_id" {}
 variable "subnet_public_web_id" {}
-variable "aws_key_name" {}
+variable "key_name" {}
+variable "public_key_value" {}
+
+resource "aws_key_pair" "key_pair" {
+  key_name   = "${var.key_name}"
+  public_key = "${var.public_key_value}"
+}
 
 # security_group
 resource "aws_security_group" "this" {
@@ -52,7 +58,7 @@ resource "aws_security_group_rule" "all" {
 resource "aws_instance" "this" {
   ami                         = "ami-0ff21806645c5e492"
   instance_type               = "t2.micro"
-  key_name                    = "${var.aws_key_name}" # EC2 に登録済の Key Pairs を指定する
+  key_name                    = "${var.key_name}"
   vpc_security_group_ids      = ["${aws_security_group.this.id}"]
   subnet_id                   = "${var.subnet_public_web_id}"
   associate_public_ip_address = "true"
