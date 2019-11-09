@@ -9,11 +9,3 @@ aws_key_name    = ""
 
 # Lambda
 aws_lambda_region = "us-west-2"
-
-# Lambda deploy
-lambda_git_repo     = "https://github.com/uzura8/gc-support-chat-lex-bot.git"
-lambda_tmp_dir_name = "workspace"
-
-# Amazon Lex
-aws_lex_intent_name = "FirstSupport"
-aws_lex_bot_name    = "GCSupportBot"

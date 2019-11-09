@@ -1,11 +1,9 @@
-variable "access_key" {}
-variable "secret_key" {}
-variable "lambda_region" {}
+variable "aws_profile" {}
+variable "aws_region" {}
 
 provider "aws" {
-  access_key = "${var.access_key}"
-  secret_key = "${var.secret_key}"
-  region     = "${var.lambda_region}"
+  profile = "${var.aws_profile}"
+  region  = "${var.aws_region}"
 }
 
 // Role for Lambda

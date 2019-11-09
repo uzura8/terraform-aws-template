@@ -1,5 +1,4 @@
-variable "aws_access_key" {}
-variable "aws_secret_key" {}
+variable "aws_profile" {}
 variable "aws_region" {}
 variable "aws_lambda_region" {}
 variable "aws_db_username" {}
@@ -7,9 +6,8 @@ variable "aws_db_password" {}
 variable "aws_key_name" {}
 
 provider "aws" {
-  access_key = "${var.aws_access_key}"
-  secret_key = "${var.aws_secret_key}"
-  region     = "${var.aws_region}"
+  profile = "${var.aws_profile}"
+  region  = "${var.aws_region}"
 }
 
 # VPC
@@ -37,9 +35,8 @@ module "module_rds" {
 
 # Lambda
 module "module_lambda" {
-  source        = "./modules/aws/lambda"
-  access_key    = "${var.aws_access_key}"
-  secret_key    = "${var.aws_secret_key}"
-  lambda_region = "${var.aws_lambda_region}"
+  source      = "./modules/aws/lambda"
+  aws_profile = "${var.aws_profile}"
+  aws_region  = "${var.aws_lambda_region}"
 }
 
