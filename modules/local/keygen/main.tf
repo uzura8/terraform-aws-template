@@ -30,3 +30,4 @@ resource "local_file" "public_key_openssh" {
     command = "chmod 600 ${local.public_key_file}"
   }
 }
+

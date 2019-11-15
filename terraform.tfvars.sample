@@ -1,12 +1,13 @@
 # General
-aws_profile = ""
+aws_profile = "default"
 aws_region  = "ap-northeast-1"
 
 # EC2
 key_name = "greatefulchat"
 
 # RDS
-aws_db_username = ""
+aws_db_name     = "dbgc"
+aws_db_username = "db_admin"
 aws_db_password = ""
 
 # Lambda

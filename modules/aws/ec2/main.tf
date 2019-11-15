@@ -55,7 +55,7 @@ resource "aws_security_group_rule" "all" {
 }
 
 # EC2
-resource "aws_instance" "this" {
+resource "aws_instance" "web1" {
   ami                         = "ami-0ff21806645c5e492"
   instance_type               = "t2.micro"
   key_name                    = "${var.key_name}"
@@ -72,12 +72,14 @@ resource "aws_instance" "this" {
     volume_size = "100"
   }
   tags = {
-    Name = "aws-instance"
+    Name = "aws-ec2-web1"
+    Role = "web1"
+    Env  = "dev"
   }
 }
 
 # EIP
 resource "aws_eip" "this" {
-  instance = "${aws_instance.this.id}"
+  instance = "${aws_instance.web1.id}"
   vpc      = true
 }

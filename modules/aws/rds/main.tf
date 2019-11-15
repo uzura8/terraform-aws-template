@@ -3,6 +3,7 @@ variable "subnet_group_db_name" {}
 variable "security_group_web_id" {}
 variable "db_username" {}
 variable "db_password" {}
+variable "db_name" {}
 
 resource "aws_security_group" "this" {
   name        = "aws-db-sg"
@@ -31,6 +32,7 @@ resource "aws_db_instance" "db" {
   storage_type              = "gp2"
   username                  = "${var.db_username}"
   password                  = "${var.db_password}"
+  name                      = "${var.db_name}"
   backup_retention_period   = 1
   vpc_security_group_ids    = ["${aws_security_group.this.id}"]
   db_subnet_group_name      = "${var.subnet_group_db_name}"
