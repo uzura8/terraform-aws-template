@@ -19,3 +19,4 @@ desktop.ini
 /terraform.tfstate*
 /terraform.tfvars
 /var/*
+/bin/setup.conf

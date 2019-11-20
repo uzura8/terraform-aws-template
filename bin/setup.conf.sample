@@ -1,0 +1,57 @@
+# setup.conf
+
+## Local
+### Lambda deploy
+LAMBDA_GIT_REPO="https://github.com/uzura8/gc-support-chat-lex-bot.git"
+LAMBDA_TMP_DIR_NAME="workspace"
+
+### Amazon Lex
+AWS_LEX_INTENT_NAME="FirstSupport"
+AWS_LEX_BOT_NAME="GCSupportBot"
+
+### common
+GC_DIR_NAME="grateful_chat"
+GC_GIT_REPO="https://github.com/uzura8/expressbird.git"
+GC_GIT_BRANCH="dev_gc"
+
+### Local
+#### common
+GC_PORT="3000"
+GC_USE_SSL="true"
+
+#### server
+GC_SESSION_SECRET_KEY="set-secret-key" # Use for session key
+
+#### client
+GC_DOMAIN="chat.example.com" # Set site domain
+GC_BASE_URL="/" # Set document root path
+GC_SITE_NAME="Sample Chat Support Site" # Set site name
+
+##### AWS
+AWS_LEX_ACCESS_KEY="set-your-aws_access_key_id"
+AWS_LEX_SECRET_KEY="set-your-aws_secret_access_key"
+AWS_LEX_REGION="us-west-2"
+
+### Remote
+NODE_VER="v10.17.0" # Set NodeJS Version
+
+
+### set vals to array for jq
+SERVER_CONFS=(
+  ".port=${GC_PORT}"
+  ".session.secretKey=\"${GC_SESSION_SECRET_KEY}\""
+  ".session.cookie.secure=${GC_USE_SSL}"
+)
+CLIENT_CONFS=(
+  ".domain=\"${GC_DOMAIN}\""
+  ".port=${GC_PORT}"
+  ".isSSL=${GC_USE_SSL}"
+  ".baseUrl=\"${GC_BASE_URL}\""
+  ".siteName=\"${GC_SITE_NAME}\""
+)
+AWS_LEX_CONFS=(
+  ".lex.credential.accessKeyId=\"${AWS_LEX_ACCESS_KEY}\""
+  ".lex.credential.secretAccessKey=\"${AWS_LEX_SECRET_KEY}\""
+  ".lex.credential.region=\"${AWS_LEX_REGION}\""
+)
+

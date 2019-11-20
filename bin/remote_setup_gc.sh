@@ -1,15 +1,15 @@
 # include config file
 
 ### load config ###
-CONFIG_FILE="`dirname $0`/setup.conf"
+CONFIG_FILE="/home/ec2-user/gc_configs/setup.conf"
 if [ ! -f $CONFIG_FILE ]; then
-    echo "Not found config file : ${CONFIG_FILE}" ; exit 1
+  echo "Not found config file : ${CONFIG_FILE}" ; exit 1
 fi
 . $CONFIG_FILE
 
-### locale setting  ###
-localectl set-locale LANG=ja_JP.utf8
-ln -sf /usr/share/zoneinfo/Japan /etc/localtime
+#### locale setting  ###
+#localectl set-locale LANG=ja_JP.utf8
+#ln -sf /usr/share/zoneinfo/Japan /etc/localtime
 
 ### Add yum optional repository ###
 sudo amazon-linux-extras enable epel
@@ -37,6 +37,8 @@ sudo yum install -y https://dev.mysql.com/get/mysql80-community-release-el7-3.no
 sudo yum-config-manager --disable mysql80-community
 sudo yum-config-manager --enable mysql57-community
 sudo yum install -y mysql-community-client
+cp /home/ec2-user/gc_configs/.my.cnf /home/ec2-user/.my.cnf
+chmod 600 /home/ec2-user/.my.cnf
 
 ### Node.js ###
 sudo yum -y install gcc-c++
@@ -59,6 +61,13 @@ nvm alias default ${NODE_VER}
 cd ~/
 git clone ${GC_GIT_REPO} ${GC_DIR_NAME}
 cd ${GC_DIR_NAME}
+git checkout origin/${GC_GIT_BRANCH}
+git checkout -b ${GC_GIT_BRANCH}
 npm install
-#cp src/server/config/config.json.sample src/server/config/config.json
-#cp src/client/js/config/config.json.sample src/client/js/config/config.json
+cp /home/ec2-user/gc_configs/config-server.json src/server/config/config.json
+cp /home/ec2-user/gc_configs/firebase-admin-credentials.json src/server/config/
+cp /home/ec2-user/gc_configs/aws-config.json src/server/config/
+cp /home/ec2-user/gc_configs/config-client.json src/client/js/config/config.json
+./node_modules/.bin/webpack --mode production
+
+#sudo yum install nginx
