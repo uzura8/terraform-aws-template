@@ -5,8 +5,6 @@ variable "aws_db_username" {}
 variable "aws_db_password" {}
 variable "aws_db_name" {}
 variable "key_name" {}
-variable "gc_admin_email" {}
-variable "gc_admin_password" {}
 
 provider "aws" {
   profile = "${var.aws_profile}"
@@ -33,17 +31,6 @@ module "module_ec2" {
   public_key_value     = "${module.module_keygen.public_key_openssh}"
 }
 
-# Setup GC
-module "module_gc" {
-  source    = "./modules/remote/gc"
-  public_ip = "${module.module_ec2.elastic_ip_of_web}"
-  key_name  = "${var.key_name}"
-  #rds_endpoint = "${module.module_rds.rds_endpoint}"
-  #db_username  = "${var.aws_db_username}"
-  #db_password  = "${var.aws_db_password}"
-  #db_name      = "${var.aws_db_name}"
-}
-
 # RDS
 module "module_rds" {
   source                = "./modules/aws/rds"
@@ -53,10 +40,14 @@ module "module_rds" {
   db_username           = "${var.aws_db_username}"
   db_password           = "${var.aws_db_password}"
   db_name               = "${var.aws_db_name}"
-  ec2_public_ip         = "${module.module_ec2.elastic_ip_of_web}"
-  ec2_key_name          = "${var.key_name}"
-  gc_admin_email        = "${var.gc_admin_email}"
-  gc_admin_password     = "${var.gc_admin_password}"
+}
+
+# Setup GC
+module "module_gc" {
+  source    = "./modules/remote/gc"
+  key_name  = "${var.key_name}"
+  rds_obj   = "${module.module_rds.rds_obj}"
+  public_ip = "${module.module_ec2.elastic_ip_of_web}"
 }
 
 # Lambda
@@ -65,4 +56,3 @@ module "module_lambda" {
   aws_profile = "${var.aws_profile}"
   aws_region  = "${var.aws_lambda_region}"
 }
-

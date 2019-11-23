@@ -7,9 +7,15 @@ if [ ! -f $CONFIG_FILE ]; then
 fi
 . $CONFIG_FILE
 
+DB_CONFIG_FILE="/home/ec2-user/gc_configs/setup_db.conf"
+if [ ! -f $DB_CONFIG_FILE ]; then
+  echo "Not found config file : ${DB_CONFIG_FILE}" ; exit 1
+fi
+. $DB_CONFIG_FILE
+
 #### locale setting  ###
-#localectl set-locale LANG=ja_JP.utf8
-#ln -sf /usr/share/zoneinfo/Japan /etc/localtime
+sudo timedatectl set-timezone Asia/Tokyo
+sudo localectl set-locale LANG=ja_JP.UTF-8
 
 ### Add yum optional repository ###
 sudo amazon-linux-extras enable epel
@@ -32,7 +38,7 @@ sudo systemctl start rsyslog
 sudo systemctl enable rsyslog
 sudo yum -y install sysstat
 
-### Add MySQL repo ###
+### Install MySQL ###
 sudo yum install -y https://dev.mysql.com/get/mysql80-community-release-el7-3.noarch.rpm
 sudo yum-config-manager --disable mysql80-community
 sudo yum-config-manager --enable mysql57-community
@@ -40,7 +46,67 @@ sudo yum install -y mysql-community-client
 cp /home/ec2-user/gc_configs/.my.cnf /home/ec2-user/.my.cnf
 chmod 600 /home/ec2-user/.my.cnf
 
-### Node.js ###
+#### Install Nginx ###
+#sudo amazon-linux-extras install -y nginx1
+#sudo cp -a /etc/nginx/nginx.conf /etc/nginx/nginx.conf.ori
+#sudo systemctl start nginx
+#sudo systemctl enable nginx
+
+### Install Apache ###
+sudo yum install -y httpd httpd-devel zlib-devel
+sudo systemctl start httpd
+sudo systemctl enable httpd
+
+#### Create Web directries
+sudo rm -f /etc/httpd/conf.d/welcome.conf
+sudo rm -f /var/www/error/noindex.html
+
+#### Apache setting
+#SERVISE_DOMAIN="ec2-13-112-39-117.ap-northeast-1.compute.amazonaws.com"
+sudo cp /etc/httpd/conf/httpd.conf /etc/httpd/conf/httpd.conf.ori
+sed -e "s/^#ServerName www.example.com:80/ServerName ${EC2_PUBLIC_DNS}:80/" /etc/httpd/conf/httpd.conf > /tmp/httpd.conf.$$
+sed -e "s/^\(AddDefaultCharset UTF-8\)/#\1/g" /tmp/httpd.conf.$$ > /tmp/httpd.conf.2.$$
+sed -e "s/^\(\s\+\)\(CustomLog .\+\)$/\1\#\2/" /tmp/httpd.conf.2.$$ > /tmp/httpd.conf.3.$$
+
+cat >> /tmp/httpd.conf.3.$$ <<EOF
+ServerSignature Off
+ServerTokens Prod
+LogFormat "%V %h %l %u %t \"%r\" %>s %b %D \"%{Referer}i\" \"%{User-Agent}i\"" combined
+LogFormat "%V %h %l %u %t \"%!414r\" %>s %b %D" common
+LogFormat "%{Referer}i -> %U" referer
+LogFormat "%{User-agent}i" agent
+# No log from worm access
+SetEnvIf Request_URI "default\.ida" no_log
+SetEnvIf Request_URI "cmd\.exe" no_log
+SetEnvIf Request_URI "root\.exe" no_log
+SetEnvIf Request_URI "Admin\.dll" no_log
+SetEnvIf Request_URI "NULL\.IDA" no_log
+# No log from intarnal access
+SetEnvIf Remote_Addr 127.0.0.1 no_log
+# Log other access
+CustomLog logs/access_log combined env=!no_log
+<DirectoryMatch ~ "/\.(svn|git)/">
+  Require all denied
+</DirectoryMatch>
+<Files ~ "^\.git">
+  Require all denied
+</Files>
+
+EOF
+
+sudo mv /tmp/httpd.conf.3.$$ /etc/httpd/conf/httpd.conf
+rm -f /tmp/httpd.conf.$$
+rm -f /tmp/httpd.conf.2.$$
+rm -f /tmp/httpd.conf.3.$$
+sudo cp /home/ec2-user/gc_configs/virtualhost.conf /etc/httpd/conf.d/
+
+sudo systemctl start httpd
+sudo systemctl enable httpd
+
+sudo sed -e "s/^\(\s\+\)\(missingok\)/\1daily\n\1dateext\n\1rotate 16\n\1\2/" /etc/logrotate.d/httpd > /tmp/logrotate.d.httpd.$$
+sudo mv /tmp/logrotate.d.httpd.$$ /etc/logrotate.d/httpd
+
+### Install Node.js ###
 sudo yum -y install gcc-c++
 mkdir ~/src
 cd ~/src
@@ -58,16 +124,21 @@ nvm use ${NODE_VER}
 nvm alias default ${NODE_VER}
 
 ### grateful_chat ###
-cd ~/
+cd /home/ec2-user/
 git clone ${GC_GIT_REPO} ${GC_DIR_NAME}
-cd ${GC_DIR_NAME}
+cd /home/ec2-user/${GC_DIR_NAME}
 git checkout origin/${GC_GIT_BRANCH}
 git checkout -b ${GC_GIT_BRANCH}
 npm install
+npm install pm2 -g
 cp /home/ec2-user/gc_configs/config-server.json src/server/config/config.json
-cp /home/ec2-user/gc_configs/firebase-admin-credentials.json src/server/config/
 cp /home/ec2-user/gc_configs/aws-config.json src/server/config/
+cp /home/ec2-user/gc_configs/firebase-admin-credentials.json src/server/config/
+cp /home/ec2-user/gc_configs/firebase_config.js src/client/js/config/
 cp /home/ec2-user/gc_configs/config-client.json src/client/js/config/config.json
 ./node_modules/.bin/webpack --mode production
+mysql -u ${RDS_USERNAME} -h ${RDS_EP} -P 3306 ${RDS_DB_NAME} < data/sql/setup.sql
+node server/create_admin_user.js ${GC_ADMIN_EMAIL} ${GC_ADMIN_PASSWORD} 'AdminUser'
 
-#sudo yum install nginx
+npm run start-pm2
+sudo systemctl restart httpd

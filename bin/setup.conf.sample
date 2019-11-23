@@ -23,7 +23,7 @@ GC_USE_SSL="true"
 GC_SESSION_SECRET_KEY="set-secret-key" # Use for session key
 
 #### client
-GC_DOMAIN="chat.example.com" # Set site domain
+#GC_DOMAIN="chat.example.com" # Set site domain
 GC_BASE_URL="/" # Set document root path
 GC_SITE_NAME="Sample Chat Support Site" # Set site name
 
@@ -43,7 +43,7 @@ SERVER_CONFS=(
   ".session.cookie.secure=${GC_USE_SSL}"
 )
 CLIENT_CONFS=(
-  ".domain=\"${GC_DOMAIN}\""
+  #".domain=\"${GC_DOMAIN}\""
   ".port=${GC_PORT}"
   ".isSSL=${GC_USE_SSL}"
   ".baseUrl=\"${GC_BASE_URL}\""
