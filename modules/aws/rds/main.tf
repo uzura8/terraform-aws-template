@@ -4,13 +4,14 @@ variable "security_group_web_id" {}
 variable "db_username" {}
 variable "db_password" {}
 variable "db_name" {}
+variable "common_prefix" {}
 
 resource "aws_security_group" "this" {
   name        = "aws-db-sg"
   description = "It is a security group on db of aws_vpc."
   vpc_id      = "${var.vpc_id}"
   tags = {
-    Name = "aws-rds"
+    Name = "${var.common_prefix}-aws-rds"
   }
 }
 
@@ -24,7 +25,7 @@ resource "aws_security_group_rule" "db" {
 }
 
 resource "aws_db_instance" "db" {
-  identifier                = "tf-dbinstance"
+  identifier                = "${var.common_prefix}-aws-rds-db01"
   allocated_storage         = 5
   engine                    = "mysql"
   engine_version            = "5.7.26"

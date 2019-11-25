@@ -1,3 +1,4 @@
+variable "common_prefix" {}
 variable "aws_profile" {}
 variable "aws_region" {}
 variable "aws_lambda_region" {}
@@ -27,8 +28,9 @@ module "module_ec2" {
   source               = "./modules/aws/ec2"
   vpc_id               = "${module.module_vpc.vpc_id}"
   subnet_public_web_id = "${module.module_vpc.subnet_public_web_id}"
-  key_name             = "${var.key_name}"
   public_key_value     = "${module.module_keygen.public_key_openssh}"
+  key_name             = "${var.key_name}"
+  common_prefix        = "${var.common_prefix}"
 }
 
 # RDS
@@ -40,6 +42,7 @@ module "module_rds" {
   db_username           = "${var.aws_db_username}"
   db_password           = "${var.aws_db_password}"
   db_name               = "${var.aws_db_name}"
+  common_prefix         = "${var.common_prefix}"
 }
 
 # Setup GC

@@ -1,7 +1,8 @@
 variable "vpc_id" {}
 variable "subnet_public_web_id" {}
-variable "key_name" {}
 variable "public_key_value" {}
+variable "key_name" {}
+variable "common_prefix" {}
 
 resource "aws_key_pair" "key_pair" {
   key_name   = "${var.key_name}"
@@ -10,11 +11,11 @@ resource "aws_key_pair" "key_pair" {
 
 # security_group
 resource "aws_security_group" "this" {
-  name        = "aws-web-sg"
+  name        = "${var.common_prefix}-aws-web-sg"
   description = "It is a security group on http of aws_vpc"
   vpc_id      = "${var.vpc_id}"
   tags = {
-    Name = "aws-web"
+    Name = "${var.common_prefix}-aws-web"
   }
 }
 
@@ -72,9 +73,8 @@ resource "aws_instance" "web1" {
     volume_size = "100"
   }
   tags = {
-    Name = "aws-ec2-web1"
+    Name = "${var.common_prefix}-aws-ec2-web1"
     Role = "web1"
-    Env  = "dev"
   }
 }
 
@@ -82,4 +82,7 @@ resource "aws_instance" "web1" {
 resource "aws_eip" "this" {
   instance = "${aws_instance.web1.id}"
   vpc      = true
+  tags = {
+    Name = "${var.common_prefix}-aws-ec2-web1"
+  }
 }
