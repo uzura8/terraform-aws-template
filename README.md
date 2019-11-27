@@ -1,7 +1,7 @@
 # terraform-aws-template
 
 ## Before Setup
-You have to install AWS-CLI, terraform, jq before setup
+You have to install AWS-CLI, terraform, jq, npm before setup
 
 ### Setup for mac
 ```bash
@@ -152,11 +152,14 @@ AWS_LEX_REGION="us-west-2"
 
 ```bash
 terraform init
-make deploy
+bash ./bin/build_lambda_file.sh
+terraform apply
+bash ./bin/lex_deploy.sh
 ```
 
 ### Destroy
 
 ```bash
-make destroy
+bash ./bin/lex_destroy.sh
+terraform destroy
 ```
