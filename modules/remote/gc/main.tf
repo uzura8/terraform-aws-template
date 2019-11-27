@@ -9,7 +9,7 @@ locals {
 resource "null_resource" "local-gc-config" {
   depends_on = [var.rds_obj]
   provisioner "local-exec" {
-    command = "sh bin/local_make_gc_config.sh"
+    command = "/bin/bash bin/local_make_gc_config.sh"
   }
 }
 
