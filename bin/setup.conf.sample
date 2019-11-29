@@ -16,8 +16,8 @@ GC_GIT_BRANCH="dev_gc"
 
 ### Local
 #### common
-GC_PORT="3000"
-GC_USE_SSL="true"
+GC_PORT="8080"
+GC_USE_SSL="false"
 
 #### server
 GC_SESSION_SECRET_KEY="set-secret-key" # Use for session key

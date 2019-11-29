@@ -10,7 +10,7 @@ key_name = "greatefulchat"
 # RDS
 aws_db_name     = "dbgc"
 aws_db_username = "db_admin"
-aws_db_password = ""
+aws_db_password = "set-password"
 
 # Lambda
 aws_lambda_region = "us-west-2"
