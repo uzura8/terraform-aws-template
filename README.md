@@ -163,3 +163,4 @@ bash ./bin/lex_deploy.sh
 bash ./bin/lex_destroy.sh
 terraform destroy
 ```
+If you want to force execute, add option '-auto-approve'
