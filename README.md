@@ -164,3 +164,20 @@ bash ./bin/lex_destroy.sh
 terraform destroy
 ```
 If you want to force execute, add option '-auto-approve'
+
+### Check GratefulChat on browser
+
+```bash
+jq -r '.resources[]|select(.type == "aws_eip").instances[0].attributes.public_dns' terraform.tfstate
+
+# You get like ec2-xxx-xxx-xxx-xxx.ap-northeast-1.compute.amazonaws.com
+```
+And you request ec2-xxx-xxx-xxx-xxx.ap-northeast-1.compute.amazonaws.com on browser.
+
+### Set GratefulChat window on outer site
+
+You set below tag on your site HTML, and Access!
+
+```html
+<script src="http://ec2-xxx-xxx-xxx-xxx.ap-northeast-1.compute.amazonaws.com/assets/js/chat_frame.js"></script>
+```
