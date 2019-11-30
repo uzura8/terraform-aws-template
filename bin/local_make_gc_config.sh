@@ -82,7 +82,7 @@ cp config-server.json /tmp/config-server.json.0
 jq ".dbs.mysql.host=\"${RDS_EP}\"" /tmp/config-server.json.0 > /tmp/config-server.json.1
 jq ".dbs.mysql.database=\"${RDS_DB_NAME}\"" /tmp/config-server.json.1 > /tmp/config-server.json.2
 jq ".dbs.mysql.user=\"${RDS_USERNAME}\"" /tmp/config-server.json.2 > /tmp/config-server.json.3
-jq ".dbs.mysql.password=\"${RDS_PASSWORD}\"" /tmp/config-server.json.3 > config-server.json.4
+jq ".dbs.mysql.password=\"${RDS_PASSWORD}\"" /tmp/config-server.json.3 > /tmp/config-server.json.4
 sed -e "s|example.com|${EC2_PUBLIC_DNS}|g" /tmp/config-server.json.4 > config-server.json
 
 cp config-client.json /tmp/config-client.json.0
