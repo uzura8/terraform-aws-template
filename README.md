@@ -139,8 +139,7 @@ Register "Email/Password" and "Anonymous" for "Sign-in providers"
 
 
 
-## Installation
-
+## Setup AWS Resources by Terraform
 ### Setup config
 
 ```bash
