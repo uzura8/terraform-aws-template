@@ -96,7 +96,7 @@ RDS_USERNAME="${RDS_USERNAME}"
 RDS_PASSWORD="${RDS_PASSWORD}"
 EOF
 
-cat >> .my.cnf <<EOF
+cat > .my.cnf <<EOF
 [client]
 password="${RDS_PASSWORD}"
 

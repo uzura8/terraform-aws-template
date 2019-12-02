@@ -137,7 +137,7 @@ cp /home/ec2-user/gc_configs/firebase-admin-credentials.json src/server/config/
 cp /home/ec2-user/gc_configs/firebase_config.js src/client/js/config/
 cp /home/ec2-user/gc_configs/config-client.json src/client/js/config/config.json
 ./node_modules/.bin/webpack --mode production
-mysql -u ${RDS_USERNAME} -h ${RDS_EP} -P 3306 ${RDS_DB_NAME} < data/sql/setup.sql
+mysql -u ${RDS_USERNAME} -h ${RDS_EP} -P 3306 ${RDS_DB_NAME} < data/sql/setup.sql && echo 'Setup db'
 node server/create_admin_user.js ${GC_ADMIN_EMAIL} ${GC_ADMIN_PASSWORD} 'AdminUser'
 
 npm run start-pm2
