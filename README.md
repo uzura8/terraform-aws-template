@@ -165,6 +165,7 @@ bash ./bin/destroy.sh
 If you want to force execute, add option '-auto-approve'
 
 ### Check GratefulChat on browser
+Get ec2 dns
 
 ```bash
 jq -r '.resources[]|select(.type == "aws_eip").instances[0].attributes.public_dns' terraform.tfstate
@@ -175,7 +176,7 @@ And you request http://ec2-xxx-xxx-xxx-xxx.ap-northeast-1.compute.amazonaws.com 
 
 ### Set GratefulChat window on outer site
 
-You set below tag on your site HTML, and Access!
+You set below tag on your site HTML, and Access the page!
 
 ```html
 <script src="http://ec2-xxx-xxx-xxx-xxx.ap-northeast-1.compute.amazonaws.com/assets/js/chat_frame.js"></script>
