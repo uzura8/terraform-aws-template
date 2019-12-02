@@ -32,6 +32,8 @@ AWS_LEX_REGION="us-west-2"
 
 ### Remote
 NODE_VER="v10.17.0" # Set NodeJS Version
+GC_ADMIN_EMAIL="admin@example.com" # Use for GC login by Admin user
+GC_ADMIN_PASSWORD="password"       # Use for GC login by Admin user
 
 
 ### set vals to array for jq
