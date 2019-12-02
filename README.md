@@ -157,13 +157,6 @@ vim bin/setup.conf
 bash ./bin/deploy.sh
 ```
 
-### Destroy
-
-```bash
-bash ./bin/destroy.sh
-```
-If you want to force execute, add option '-auto-approve'
-
 ### Check GratefulChat on browser
 Get ec2 dns
 
@@ -181,3 +174,11 @@ You set below tag on your site HTML, and Access the page!
 ```html
 <script src="http://ec2-xxx-xxx-xxx-xxx.ap-northeast-1.compute.amazonaws.com/assets/js/chat_frame.js"></script>
 ```
+
+
+## Destroy AWS Resources
+
+```bash
+bash ./bin/destroy.sh
+```
+
