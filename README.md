@@ -48,7 +48,7 @@ docker stop ubuntu_tf_gc_con
 docker rm ubuntu_tf_gc_con
 docker run -v /Users/shingo/.aws:/root/.aws -it --name ubuntu_tf_gc_con ubuntu_tf_gc:latest /bin/bash
 ```
-Execute run.sh.
+Execute run.sh  
 Move to your work dir, and chekout this project.
 
 
