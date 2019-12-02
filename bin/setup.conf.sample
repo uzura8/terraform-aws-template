@@ -28,8 +28,6 @@ GC_BASE_URL="/" # Set document root path
 GC_SITE_NAME="Sample Chat Support Site" # Set site name
 
 ##### AWS
-AWS_LEX_ACCESS_KEY="set-your-aws_access_key_id"
-AWS_LEX_SECRET_KEY="set-your-aws_secret_access_key"
 AWS_LEX_REGION="us-west-2"
 
 ### Remote
@@ -50,7 +48,5 @@ CLIENT_CONFS=(
   ".siteName=\"${GC_SITE_NAME}\""
 )
 AWS_LEX_CONFS=(
-  ".lex.credential.accessKeyId=\"${AWS_LEX_ACCESS_KEY}\""
-  ".lex.credential.secretAccessKey=\"${AWS_LEX_SECRET_KEY}\""
   ".lex.credential.region=\"${AWS_LEX_REGION}\""
 )

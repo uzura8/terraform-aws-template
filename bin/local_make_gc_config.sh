@@ -77,6 +77,9 @@ RDS_EP=`jq -r '.resources|.[]|select(.name=="db")|.instances|.[]|select(.schema_
 RDS_DB_NAME=`tf_conf aws_db_name`
 RDS_USERNAME=`tf_conf aws_db_username`
 RDS_PASSWORD=`tf_conf aws_db_password`
+AWS_PROFILE=`tf_conf aws_profile`
+AWS_ACCESS_KEY=`aws configure get --profile=${AWS_PROFILE} aws_access_key_id`
+AWS_SECRET_KEY=`aws configure get --profile=${AWS_PROFILE} aws_secret_access_key`
 cd ./var/gc_configs
 cp config-server.json /tmp/config-server.json.0
 jq ".dbs.mysql.host=\"${RDS_EP}\"" /tmp/config-server.json.0 > /tmp/config-server.json.1
@@ -87,6 +90,12 @@ sed -e "s|example.com|${EC2_PUBLIC_DNS}|g" /tmp/config-server.json.4 > config-se
 
 cp config-client.json /tmp/config-client.json.0
 jq ".domain=\"${EC2_PUBLIC_DNS}\"" /tmp/config-client.json.0 > config-client.json
+
+cp aws-config.json /tmp/aws-config.json.0
+jq ".lex.credential.accessKeyId=\"${AWS_ACCESS_KEY}\"" /tmp/aws-config.json.0 > /tmp/aws-config.json.1
+jq ".lex.credential.secretAccessKey=\"${AWS_SECRET_KEY}\"" /tmp/aws-config.json.1 > /tmp/aws-config.json.2
+mv /tmp/aws-config.json.2 aws-config.json
+rm -f /tmp/aws-config.json.0 /tmp/aws-config.json.1
 
 cat > setup_db.conf <<EOF
 EC2_PUBLIC_DNS="${EC2_PUBLIC_DNS}"
