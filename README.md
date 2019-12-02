@@ -1,7 +1,7 @@
 # terraform-aws-template
 
 ### Build enviroment of Terraform exicution
-You have to install AWS-CLI, terraform, jq, npm on enviroment of terraform exicution
+You have to install AWS-CLI, terraform, jq, npm on enviroment of terraform execution
 
 #### Setup enviroment on mac
 ```bash
