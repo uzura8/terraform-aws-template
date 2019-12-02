@@ -105,63 +105,21 @@ Register "Email/Password" and "Anonymous" for "Sign-in providers"
 ```bash
 cp terraform.tfvars.sample terraform.tfvars
 cp bin/setup.conf.sample bin/setup.conf
-vi terraform.tfvars
-vi bin/setup.conf
+vim terraform.tfvars
+vim bin/setup.conf
 # Edit config for your env
-```
-
-```bash
-# terraform.tfvars
-
-# General
-aws_profile = "default"
-aws_region  = "ap-northeast-1"
-
-# RDS
-aws_db_name     = "dbgc"
-aws_db_username = "db_admin"
-aws_db_password = ""
-
-# Lambda
-aws_lambda_region = "us-west-2"
-```
-
-```bash
-# bin/setup.conf
-
-### Local
-#### common
-GC_PORT="3000"
-GC_USE_SSL="true"
-
-#### server
-GC_SESSION_SECRET_KEY="set-secret-key" # Use for session key
-
-#### client
-#GC_DOMAIN="chat.example.com" # Set site domain
-GC_BASE_URL="/" # Set document root path
-GC_SITE_NAME="Sample Chat Support Site" # Set site name
-
-##### AWS
-AWS_LEX_ACCESS_KEY="set-your-aws_access_key_id"
-AWS_LEX_SECRET_KEY="set-your-aws_secret_access_key"
-AWS_LEX_REGION="us-west-2"
 ```
 
 ### Deploy
 
 ```bash
-terraform init
-bash ./bin/build_lambda_file.sh
-terraform apply
-bash ./bin/lex_deploy.sh
+bash ./bin/deploy.sh
 ```
 
 ### Destroy
 
 ```bash
-bash ./bin/lex_destroy.sh
-terraform destroy
+bash ./bin/destroy.sh
 ```
 If you want to force execute, add option '-auto-approve'
 
@@ -172,7 +130,7 @@ jq -r '.resources[]|select(.type == "aws_eip").instances[0].attributes.public_dn
 
 # You get like ec2-xxx-xxx-xxx-xxx.ap-northeast-1.compute.amazonaws.com
 ```
-And you request ec2-xxx-xxx-xxx-xxx.ap-northeast-1.compute.amazonaws.com on browser.
+And you request http://ec2-xxx-xxx-xxx-xxx.ap-northeast-1.compute.amazonaws.com on browser.
 
 ### Set GratefulChat window on outer site
 
