@@ -6,6 +6,12 @@ common_prefix = "tf"
 
 # EC2
 key_name = "greatefulchat"
+ec2_ami                    = "ami-068a6cefc24c301d2"
+ec2_instance_type          = "t2.micro"
+ec2_root_block_volume_type = "gp2"
+ec2_root_block_volume_size = "15"
+ec2_ebs_block_volume_type  = "gp2"
+ec2_ebs_block_volume_size  = "50"
 
 ## RDS
 #aws_db_name     = "dbgc"

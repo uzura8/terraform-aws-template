@@ -3,6 +3,12 @@ variable "subnet_public_web_id" {}
 variable "public_key_value" {}
 variable "key_name" {}
 variable "common_prefix" {}
+variable "ec2_ami" {}
+variable "ec2_instance_type" {}
+variable "ec2_root_block_volume_type" {}
+variable "ec2_root_block_volume_size" {}
+variable "ec2_ebs_block_volume_type" {}
+variable "ec2_ebs_block_volume_size" {}
 
 resource "aws_key_pair" "key_pair" {
   key_name   = "${var.key_name}"
@@ -57,20 +63,20 @@ resource "aws_security_group_rule" "all" {
 
 # EC2
 resource "aws_instance" "web1" {
-  ami                         = "ami-0ff21806645c5e492"
-  instance_type               = "t2.micro"
+  ami                         = "${var.ec2_ami}"
+  instance_type               = "${var.ec2_instance_type}"
   key_name                    = "${var.key_name}"
   vpc_security_group_ids      = ["${aws_security_group.this.id}"]
   subnet_id                   = "${var.subnet_public_web_id}"
   associate_public_ip_address = "true"
   root_block_device {
-    volume_type = "gp2"
-    volume_size = "20"
+    volume_type = "${var.ec2_root_block_volume_type}"
+    volume_size = "${var.ec2_root_block_volume_size}"
   }
   ebs_block_device {
     device_name = "/dev/sdf"
-    volume_type = "gp2"
-    volume_size = "100"
+    volume_type = "${var.ec2_ebs_block_volume_type}"
+    volume_size = "${var.ec2_ebs_block_volume_size}"
   }
   tags = {
     Name = "${var.common_prefix}-aws-ec2-web1"

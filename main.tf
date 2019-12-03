@@ -2,6 +2,12 @@ variable "common_prefix" {}
 variable "aws_profile" {}
 variable "aws_region" {}
 variable "key_name" {}
+variable "ec2_ami" {}
+variable "ec2_instance_type" {}
+variable "ec2_root_block_volume_type" {}
+variable "ec2_root_block_volume_size" {}
+variable "ec2_ebs_block_volume_type" {}
+variable "ec2_ebs_block_volume_size" {}
 
 provider "aws" {
   profile = "${var.aws_profile}"
@@ -21,12 +27,18 @@ module "module_vpc" {
 
 # EC2
 module "module_ec2" {
-  source               = "./modules/aws/ec2"
-  vpc_id               = "${module.module_vpc.vpc_id}"
-  subnet_public_web_id = "${module.module_vpc.subnet_public_web_id}"
-  public_key_value     = "${module.module_keygen.public_key_openssh}"
-  key_name             = "${var.key_name}"
-  common_prefix        = "${var.common_prefix}"
+  source                     = "./modules/aws/ec2"
+  vpc_id                     = "${module.module_vpc.vpc_id}"
+  subnet_public_web_id       = "${module.module_vpc.subnet_public_web_id}"
+  public_key_value           = "${module.module_keygen.public_key_openssh}"
+  key_name                   = "${var.key_name}"
+  common_prefix              = "${var.common_prefix}"
+  ec2_ami                    = "${var.ec2_ami}"
+  ec2_instance_type          = "${var.ec2_instance_type}"
+  ec2_root_block_volume_type = "${var.ec2_root_block_volume_type}"
+  ec2_root_block_volume_size = "${var.ec2_root_block_volume_size}"
+  ec2_ebs_block_volume_type  = "${var.ec2_ebs_block_volume_type}"
+  ec2_ebs_block_volume_size  = "${var.ec2_ebs_block_volume_size}"
 }
 
 ## RDS
