@@ -1,13 +1,13 @@
 variable "key_name" {}
 variable "public_ip" {}
-variable "rds_obj" {}
+variable "ec2_obj" {}
 
 locals {
   private_key_file = "var/${var.key_name}.id_rsa"
 }
 
 resource "null_resource" "local-gc-config" {
-  depends_on = [var.rds_obj]
+  depends_on = [var.ec2_obj]
   provisioner "local-exec" {
     command = "/bin/bash bin/local_make_gc_config.sh"
   }

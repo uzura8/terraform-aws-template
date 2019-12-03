@@ -1,54 +1,38 @@
 # setup.conf
 
-## Local
-### Lambda deploy
-LAMBDA_GIT_REPO="https://github.com/uzura8/gc-support-chat-lex-bot.git"
-LAMBDA_TMP_DIR_NAME="workspace"
-
-### Amazon Lex
-AWS_LEX_INTENT_NAME="FirstSupport"
-AWS_LEX_BOT_NAME="GCSupportBot"
-
-### common
-GC_DIR_NAME="grateful_chat"
-GC_GIT_REPO="https://github.com/uzura8/expressbird.git"
-GC_GIT_BRANCH="dev_gc"
+## common
+#GC_DIR_NAME="grateful_chat"
+#GC_GIT_REPO="https://github.com/uzura8/expressbird.git"
+#GC_GIT_BRANCH="dev_gc"
 
 ### Local
 #### common
-GC_PORT="8080"
-GC_USE_SSL="false"
+#GC_PORT="8080"
+#GC_USE_SSL="false"
 
 #### server
-GC_SESSION_SECRET_KEY="set-secret-key" # Use for session key
+#GC_SESSION_SECRET_KEY="set-secret-key" # Use for session key
 
 #### client
-#WEB_DOMAIN="chat.example.com" # Set site domain, if you have own domain name
-WEB_BASE_URL="/" # Set document root path
-WEB_SITE_NAME="Sample Chat Support Site" # Set site name
-
-##### AWS
-AWS_LEX_REGION="us-west-2"
+WEB_DOMAIN="example.com"
+#WEB_BASE_URL="/"
+#WEB_SITE_NAME="Sample Site"
 
 ### Remote
-NODE_VER="v10.17.0" # Set NodeJS Version
-GC_ADMIN_EMAIL="admin@example.com" # Use for GC login by Admin user
-GC_ADMIN_PASSWORD="password"       # Use for GC login by Admin user
+GIT_USER_EMAIL="admin@example.com"
+GIT_USER_NAME="set-your-name"
 
 
-### set vals to array for jq
-SERVER_CONFS=(
-  ".port=${GC_PORT}"
-  ".session.secretKey=\"${GC_SESSION_SECRET_KEY}\""
-  ".session.cookie.secure=${GC_USE_SSL}"
-)
-CLIENT_CONFS=(
-  #".domain=\"${WEB_DOMAIN}\""
-  ".port=${GC_PORT}"
-  ".isSSL=${GC_USE_SSL}"
-  ".baseUrl=\"${WEB_BASE_URL}\""
-  ".siteName=\"${WEB_SITE_NAME}\""
-)
-AWS_LEX_CONFS=(
-  ".lex.credential.region=\"${AWS_LEX_REGION}\""
-)
+#### set vals to array for jq
+#SERVER_CONFS=(
+#  ".port=${GC_PORT}"
+#  ".session.secretKey=\"${GC_SESSION_SECRET_KEY}\""
+#  ".session.cookie.secure=${GC_USE_SSL}"
+#)
+#CLIENT_CONFS=(
+#  #".domain=\"${WEB_DOMAIN}\""
+#  ".port=${GC_PORT}"
+#  ".isSSL=${GC_USE_SSL}"
+#  ".baseUrl=\"${WEB_BASE_URL}\""
+#  ".siteName=\"${WEB_SITE_NAME}\""
+#)
