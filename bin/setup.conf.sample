@@ -23,9 +23,9 @@ GC_USE_SSL="false"
 GC_SESSION_SECRET_KEY="set-secret-key" # Use for session key
 
 #### client
-#GC_DOMAIN="chat.example.com" # Set site domain
-GC_BASE_URL="/" # Set document root path
-GC_SITE_NAME="Sample Chat Support Site" # Set site name
+#WEB_DOMAIN="chat.example.com" # Set site domain, if you have own domain name
+WEB_BASE_URL="/" # Set document root path
+WEB_SITE_NAME="Sample Chat Support Site" # Set site name
 
 ##### AWS
 AWS_LEX_REGION="us-west-2"
@@ -43,11 +43,11 @@ SERVER_CONFS=(
   ".session.cookie.secure=${GC_USE_SSL}"
 )
 CLIENT_CONFS=(
-  #".domain=\"${GC_DOMAIN}\""
+  #".domain=\"${WEB_DOMAIN}\""
   ".port=${GC_PORT}"
   ".isSSL=${GC_USE_SSL}"
-  ".baseUrl=\"${GC_BASE_URL}\""
-  ".siteName=\"${GC_SITE_NAME}\""
+  ".baseUrl=\"${WEB_BASE_URL}\""
+  ".siteName=\"${WEB_SITE_NAME}\""
 )
 AWS_LEX_CONFS=(
   ".lex.credential.region=\"${AWS_LEX_REGION}\""

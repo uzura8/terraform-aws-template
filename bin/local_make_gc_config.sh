@@ -80,16 +80,19 @@ RDS_PASSWORD=`tf_conf aws_db_password`
 AWS_PROFILE=`tf_conf aws_profile`
 AWS_ACCESS_KEY=`aws configure get --profile=${AWS_PROFILE} aws_access_key_id`
 AWS_SECRET_KEY=`aws configure get --profile=${AWS_PROFILE} aws_secret_access_key`
+if [ -z $WEB_DOMAIN ]; then
+  WEB_DOMAIN=$EC2_PUBLIC_DNS
+fi
 cd ./var/gc_configs
 cp config-server.json /tmp/config-server.json.0
 jq ".dbs.mysql.host=\"${RDS_EP}\"" /tmp/config-server.json.0 > /tmp/config-server.json.1
 jq ".dbs.mysql.database=\"${RDS_DB_NAME}\"" /tmp/config-server.json.1 > /tmp/config-server.json.2
 jq ".dbs.mysql.user=\"${RDS_USERNAME}\"" /tmp/config-server.json.2 > /tmp/config-server.json.3
 jq ".dbs.mysql.password=\"${RDS_PASSWORD}\"" /tmp/config-server.json.3 > /tmp/config-server.json.4
-sed -e "s|example.com|${EC2_PUBLIC_DNS}|g" /tmp/config-server.json.4 > config-server.json
+sed -e "s|example.com|${WEB_DOMAIN}|g" /tmp/config-server.json.4 > config-server.json
 
 cp config-client.json /tmp/config-client.json.0
-jq ".domain=\"${EC2_PUBLIC_DNS}\"" /tmp/config-client.json.0 > config-client.json
+jq ".domain=\"${WEB_DOMAIN}\"" /tmp/config-client.json.0 > config-client.json
 
 cp aws-config.json /tmp/aws-config.json.0
 jq ".lex.credential.accessKeyId=\"${AWS_ACCESS_KEY}\"" /tmp/aws-config.json.0 > /tmp/aws-config.json.1
@@ -98,7 +101,7 @@ mv /tmp/aws-config.json.2 aws-config.json
 rm -f /tmp/aws-config.json.0 /tmp/aws-config.json.1
 
 cat > setup_db.conf <<EOF
-EC2_PUBLIC_DNS="${EC2_PUBLIC_DNS}"
+WEB_DOMAIN="${WEB_DOMAIN}"
 RDS_EP="${RDS_EP}"
 RDS_DB_NAME="${RDS_DB_NAME}"
 RDS_USERNAME="${RDS_USERNAME}"
@@ -120,7 +123,7 @@ cat > virtualhost.conf <<EOF
 #  AllowOverride All
 #</Directory>
 <VirtualHost *:80>
-  ServerName ${EC2_PUBLIC_DNS}
+  ServerName ${WEB_DOMAIN}
   ProxyPreserveHost On
   #ProxyRequests off
   ProxyPass / http://localhost:${GC_PORT}/
