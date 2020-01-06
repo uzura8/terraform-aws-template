@@ -150,6 +150,44 @@ vim bin/setup.conf
 # Edit config for your env
 ```
 
+```bash
+# terraform.tfvars
+
+# General
+aws_profile = "default"
+aws_region  = "ap-northeast-1"
+
+# RDS
+aws_db_name     = "dbgc"
+aws_db_username = "db_admin"
+aws_db_password = ""
+
+# Lambda
+aws_lambda_region = "us-west-2"
+```
+
+```bash
+# bin/setup.conf
+
+### Local
+#### common
+GC_PORT="3000"
+GC_USE_SSL="true"
+
+#### server
+GC_SESSION_SECRET_KEY="set-secret-key" # Use for session key
+
+#### client
+#GC_DOMAIN="chat.example.com" # Set site domain
+GC_BASE_URL="/" # Set document root path
+GC_SITE_NAME="Sample Chat Support Site" # Set site name
+
+##### AWS
+AWS_LEX_ACCESS_KEY="set-your-aws_access_key_id"
+AWS_LEX_SECRET_KEY="set-your-aws_secret_access_key"
+AWS_LEX_REGION="us-west-2"
+```
+
 ### Deploy
 
 ```bash
