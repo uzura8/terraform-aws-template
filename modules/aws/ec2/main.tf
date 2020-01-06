@@ -82,6 +82,7 @@ resource "aws_instance" "web1" {
     Name = "${var.common_prefix}-aws-ec2-web1"
     Role = "web1"
   }
+  user_data = "${file("bin/ec2_userdata.sh")}"
 }
 
 # EIP
