@@ -46,7 +46,7 @@ WORKDIR /root
 docker build -t ubuntu_tf_gc .
 docker stop ubuntu_tf_gc_con
 docker rm ubuntu_tf_gc_con
-docker run -v /Users/shingo/.aws:/root/.aws -it --name ubuntu_tf_gc_con ubuntu_tf_gc:latest /bin/bash
+docker run -v /user-home-dir-path/.aws:/root/.aws -it --name ubuntu_tf_gc_con ubuntu_tf_gc:latest /bin/bash
 ```
 Execute run.sh  
 Move to your work dir, and chekout this project.
