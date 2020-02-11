@@ -3,7 +3,9 @@ variable "public_ip" {}
 variable "rds_obj" {}
 
 locals {
-  private_key_file = "var/${var.key_name}.id_rsa"
+  ## If genarated by terraform
+  #private_key_file = "var/${var.key_name}.id_rsa"
+  private_key_file = "~/.ssh/${var.key_name}.id_rsa"
 }
 
 #resource "null_resource" "local-gc-config" {
@@ -32,10 +34,10 @@ locals {
 #}
 
 resource "null_resource" "ec2-ssh-setup-gc" {
-  depends_on = [null_resource.provision-web]
+  #depends_on = [null_resource.provision-web]
   provisioner "remote-exec" {
     scripts = [
-      "bin/remote_setup_gc.sh"
+      "bin/remote_setup_web.sh"
     ]
 
     connection {

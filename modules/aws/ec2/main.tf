@@ -1,6 +1,6 @@
 variable "vpc_id" {}
 variable "subnet_public_web_id" {}
-variable "public_key_value" {}
+#variable "public_key_value" {}
 variable "key_name" {}
 variable "common_prefix" {}
 variable "ec2_ami" {}

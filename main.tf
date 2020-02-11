@@ -1,10 +1,11 @@
 variable "common_prefix" {}
 variable "aws_profile" {}
 variable "aws_region" {}
-variable "aws_lambda_region" {}
+#variable "aws_lambda_region" {}
 variable "aws_db_username" {}
 variable "aws_db_password" {}
 variable "aws_db_name" {}
+variable "vpc_availability_zone" {}
 variable "key_name" {}
 variable "ec2_ami" {}
 variable "ec2_instance_type" {}
@@ -26,7 +27,8 @@ provider "aws" {
 
 # VPC
 module "module_vpc" {
-  source = "./modules/aws/vpc"
+  source            = "./modules/aws/vpc"
+  availability_zone = "${var.vpc_availability_zone}"
 }
 
 # EC2

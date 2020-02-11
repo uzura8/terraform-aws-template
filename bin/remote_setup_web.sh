@@ -1,17 +1,7 @@
-# include config file
+#!/bin/bash
 
-### load config ###
-CONFIG_FILE="/home/ec2-user/gc_configs/setup.conf"
-if [ ! -f $CONFIG_FILE ]; then
-  echo "Not found config file : ${CONFIG_FILE}" ; exit 1
-fi
-. $CONFIG_FILE
-
-DB_CONFIG_FILE="/home/ec2-user/gc_configs/setup_db.conf"
-if [ ! -f $DB_CONFIG_FILE ]; then
-  echo "Not found config file : ${DB_CONFIG_FILE}" ; exit 1
-fi
-. $DB_CONFIG_FILE
+NODE_VER=12.15.0
+SERVISE_DOMAIN=example.com
 
 #### locale setting  ###
 sudo timedatectl set-timezone Asia/Tokyo
@@ -43,14 +33,6 @@ sudo yum install -y https://dev.mysql.com/get/mysql80-community-release-el7-3.no
 sudo yum-config-manager --disable mysql80-community
 sudo yum-config-manager --enable mysql57-community
 sudo yum install -y mysql-community-client
-cp /home/ec2-user/gc_configs/.my.cnf /home/ec2-user/.my.cnf
-chmod 600 /home/ec2-user/.my.cnf
-
-#### Install Nginx ###
-#sudo amazon-linux-extras install -y nginx1
-#sudo cp -a /etc/nginx/nginx.conf /etc/nginx/nginx.conf.ori
-#sudo systemctl start nginx
-#sudo systemctl enable nginx
 
 ### Install Apache ###
 sudo yum install -y httpd httpd-devel zlib-devel
@@ -60,15 +42,17 @@ sudo systemctl enable httpd
 #### Create Web directries
 sudo rm -f /etc/httpd/conf.d/welcome.conf
 sudo rm -f /var/www/error/noindex.html
+sudo rm -f /var/www/error/noindex.html
+sudo mkdir -p /var/www/sites
 
 #### Apache setting
 #SERVISE_DOMAIN="ec2-13-112-39-117.ap-northeast-1.compute.amazonaws.com"
 sudo cp /etc/httpd/conf/httpd.conf /etc/httpd/conf/httpd.conf.ori
-sed -e "s/^#ServerName www.example.com:80/ServerName ${WEB_DOMAIN}:80/" /etc/httpd/conf/httpd.conf > /tmp/httpd.conf.$$
-sed -e "s/^\(AddDefaultCharset UTF-8\)/#\1/g" /tmp/httpd.conf.$$ > /tmp/httpd.conf.2.$$
-sed -e "s/^\(\s\+\)\(CustomLog .\+\)$/\1\#\2/" /tmp/httpd.conf.2.$$ > /tmp/httpd.conf.3.$$
+#sed -e "s/^#ServerName www.example.com:80/ServerName ${WEB_DOMAIN}:80/" /etc/httpd/conf/httpd.conf > /tmp/httpd.conf.$$
+sudo sed -e "s/^\(AddDefaultCharset UTF-8\)/#\1/g" /tmp/httpd.conf > /tmp/httpd.conf.$$
+sudo sed -e "s/^\(\s\+\)\(CustomLog .\+\)$/\1\#\2/" /tmp/httpd.conf.$$ > /tmp/httpd.conf.2.$$
 
-cat >> /tmp/httpd.conf.3.$$ <<EOF
+sudo cat >> /tmp/httpd.conf.2.$$ <<EOF
 ServerSignature Off
 ServerTokens Prod
 LogFormat "%V %h %l %u %t \"%r\" %>s %b %D \"%{Referer}i\" \"%{User-Agent}i\"" combined
@@ -94,11 +78,20 @@ CustomLog logs/access_log combined env=!no_log
 
 EOF
 
-sudo mv /tmp/httpd.conf.3.$$ /etc/httpd/conf/httpd.conf
-rm -f /tmp/httpd.conf.$$
-rm -f /tmp/httpd.conf.2.$$
-rm -f /tmp/httpd.conf.3.$$
-sudo cp /home/ec2-user/gc_configs/virtualhost.conf /etc/httpd/conf.d/
+sudo mv /tmp/httpd.conf.2.$$ /etc/httpd/conf/httpd.conf
+sudo rm -f /tmp/httpd.conf.$$
+sudo rm -f /tmp/httpd.conf.2.$$
+
+sudo cat > /etc/httpd/conf.d/virtualhost.conf <<EOF
+<VirtualHost *:80>
+  ServerName localhost
+  VirtualDocumentRoot /var/www/sites/%0/public
+</VirtualHost>
+<Directory "/var/www/sites">
+  AllowOverride All
+</Directory>
+
+EOF
 
 sudo systemctl start httpd
 sudo systemctl enable httpd
@@ -124,3 +117,22 @@ nvm install ${NODE_VER}
 nvm use ${NODE_VER}
 nvm alias default ${NODE_VER}
 
+# Install python
+sudo yum install -y python3-devel python3-libs python3-setuptools python3-pip
+sudo yum install -y httpd-devel
+sudo pip3 install mod_wsgi
+#MOD_WSGI_PATH=`find /usr/local/ -type f -name "mod_wsgi*.so"`
+#sudo cat >> /etc/httpd/conf.d/virtualhost.conf <<EOF
+#LoadModule wsgi_module ${MOD_WSGI_PATH}
+#<VirtualHost *:80>
+#  ServerName ${SERVISE_DOMAIN}
+#  DocumentRoot /var/www/sites/${SERVISE_DOMAIN}
+#  WSGIScriptAlias / /var/www/sites/${SERVISE_DOMAIN}/adapter.wsgi
+#  <Directory "/var/www/sites/${SERVISE_DOMAIN}/">
+#    Order deny,allow
+#    Allow from all
+#  </Directory>
+#</VirtualHost>
+#EOF
+#
+#sudo systemctl restart httpd

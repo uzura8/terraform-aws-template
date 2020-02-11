@@ -57,9 +57,8 @@ Move to your work dir, and chekout this project.
 
 ```bash
 cp terraform.tfvars.sample terraform.tfvars
-cp bin/setup.conf.sample bin/setup.conf
 vim terraform.tfvars
-vim bin/setup.conf
+vim bin/remote_setup_web.sh
 # Edit config for your env
 ```
 
@@ -70,30 +69,31 @@ vim bin/setup.conf
 aws_profile = "default"
 aws_region  = "ap-northeast-1"
 
-# RDS
-aws_db_name     = "dbgc"
-aws_db_username = "db_admin"
-aws_db_password = ""
+common_prefix = "tf"
 
-# Lambda
-aws_lambda_region = "us-west-2"
+# VPC
+vpc_availability_zone = "ap-northeast-1a"
+
+# EC2
+key_name                   = "your-ssh-key-name"
+ec2_ami                    = "ami-011facbea5ec0363b"
+ec2_instance_type          = "t2.micro"
+ec2_root_block_volume_type = "standard" # gp2 / io1 / standard
+ec2_root_block_volume_size = "15"
+ec2_ebs_block_volume_type  = "standard" # gp2 / io1 / standard
+ec2_ebs_block_volume_size  = "50"
+
+# RDS
+aws_db_name     = "set-db_name"
+aws_db_username = "set-db_admin"
+aws_db_password = "set-db_password"
 ```
 
 ```bash
-# bin/setup.conf
+# bin/remote_setup_web.sh
 
-### Local
-#### common
-GC_PORT="3000"
-GC_USE_SSL="true"
-
-#### server
-GC_SESSION_SECRET_KEY="set-secret-key" # Use for session key
-
-#### client
-#GC_DOMAIN="chat.example.com" # Set site domain
-GC_BASE_URL="/" # Set document root path
-GC_SITE_NAME="Sample Chat Support Site" # Set site name
+NODE_VER=12.15.0
+SERVISE_DOMAIN=example.com
 ```
 
 ### Deploy

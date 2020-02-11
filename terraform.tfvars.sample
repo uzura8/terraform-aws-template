@@ -4,9 +4,12 @@ aws_region  = "ap-northeast-1"
 
 common_prefix = "tf"
 
+# VPC
+vpc_availability_zone = "ap-northeast-1a"
+
 # EC2
 key_name                   = "your-ssh-key-name"
-ec2_ami                    = "ami-0a852f71330148ab4"
+ec2_ami                    = "ami-011facbea5ec0363b"
 ec2_instance_type          = "t2.micro"
 ec2_root_block_volume_type = "standard" # gp2 / io1 / standard
 ec2_root_block_volume_size = "15"

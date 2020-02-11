@@ -1,3 +1,5 @@
+variable "availability_zone" {}
+
 resource "aws_vpc" "this" {
   cidr_block           = "10.0.0.0/16"
   instance_tenancy     = "default"
@@ -29,7 +31,7 @@ resource "aws_route_table" "public_rt" {
 resource "aws_subnet" "public_web" {
   vpc_id                  = "${aws_vpc.this.id}"
   cidr_block              = "10.0.0.0/24"
-  availability_zone       = "ap-northeast-1b"
+  availability_zone       = "${var.availability_zone}"
   map_public_ip_on_launch = true
   tags = {
     Name = "aws-public-web-subnet"
@@ -45,7 +47,7 @@ resource "aws_route_table_association" "public_web" {
 resource "aws_subnet" "private_db1" {
   vpc_id            = "${aws_vpc.this.id}"
   cidr_block        = "10.0.1.0/24"
-  availability_zone = "ap-northeast-1b"
+  availability_zone = "${var.availability_zone}"
   tags = {
     Name = "aws-private-db1-subnet"
   }
@@ -61,7 +63,6 @@ resource "aws_subnet" "private_db2" {
 }
 
 resource "aws_db_subnet_group" "main" {
-  name        = "db_subnet_group"
   description = "It is a DB subnet group on tf_vpc."
   subnet_ids  = ["${aws_subnet.private_db1.id}", "${aws_subnet.private_db2.id}"]
   tags = {
