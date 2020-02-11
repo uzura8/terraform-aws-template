@@ -2,6 +2,12 @@ variable "common_prefix" {}
 variable "aws_profile" {}
 variable "aws_region" {}
 #variable "aws_lambda_region" {}
+variable "aws_db_instance_type" {}
+variable "aws_db_allocated_storage" {}
+variable "aws_db_block_volume_type" {}
+variable "aws_db_engine" {}
+variable "aws_db_engine_version" {}
+variable "aws_db_port" {}
 variable "aws_db_username" {}
 variable "aws_db_password" {}
 variable "aws_db_name" {}
@@ -53,6 +59,12 @@ module "module_rds" {
   vpc_id                = "${module.module_vpc.vpc_id}"
   security_group_web_id = "${module.module_ec2.security_group_web_id}"
   subnet_group_db_name  = "${module.module_vpc.subnet_group_db_name}"
+  db_instance_type      = "${var.aws_db_instance_type}"
+  db_allocated_storage  = "${var.aws_db_allocated_storage}"
+  db_block_volume_type  = "${var.aws_db_block_volume_type}"
+  db_engine             = "${var.aws_db_engine}"
+  db_engine_version     = "${var.aws_db_engine_version}"
+  db_port               = "${var.aws_db_port}"
   db_username           = "${var.aws_db_username}"
   db_password           = "${var.aws_db_password}"
   db_name               = "${var.aws_db_name}"

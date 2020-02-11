@@ -17,7 +17,13 @@ ec2_ebs_block_volume_type  = "standard" # gp2 / io1 / standard
 ec2_ebs_block_volume_size  = "50"
 
 # RDS
-aws_db_name     = "set-db_name"
-aws_db_username = "set-db_admin"
-aws_db_password = "set-db_password"
+aws_db_instance_type     = "db.t2.micro"
+aws_db_block_volume_type = "gp2" # gp2 / io1 / standard
+aws_db_allocated_storage = "20"  # GB
+aws_db_engine            = "mysql"
+aws_db_engine_version    = "5.7.28"
+aws_db_port              = "3306"
+aws_db_name              = "set-db_name"
+aws_db_username          = "set-db_admin"
+aws_db_password          = "set-db_password"
 
