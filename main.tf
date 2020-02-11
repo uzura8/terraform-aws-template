@@ -18,11 +18,11 @@ provider "aws" {
   region  = "${var.aws_region}"
 }
 
-# Local
-module "module_keygen" {
-  source   = "./modules/local/keygen"
-  key_name = "${var.key_name}"
-}
+## Local
+#module "module_keygen" {
+#  source   = "./modules/local/keygen"
+#  key_name = "${var.key_name}"
+#}
 
 # VPC
 module "module_vpc" {
@@ -34,7 +34,6 @@ module "module_ec2" {
   source                     = "./modules/aws/ec2"
   vpc_id                     = "${module.module_vpc.vpc_id}"
   subnet_public_web_id       = "${module.module_vpc.subnet_public_web_id}"
-  public_key_value           = "${module.module_keygen.public_key_openssh}"
   key_name                   = "${var.key_name}"
   common_prefix              = "${var.common_prefix}"
   ec2_ami                    = "${var.ec2_ami}"
@@ -43,6 +42,7 @@ module "module_ec2" {
   ec2_root_block_volume_size = "${var.ec2_root_block_volume_size}"
   ec2_ebs_block_volume_type  = "${var.ec2_ebs_block_volume_type}"
   ec2_ebs_block_volume_size  = "${var.ec2_ebs_block_volume_size}"
+  #public_key_value           = "${module.module_keygen.public_key_openssh}"
 }
 
 # RDS
@@ -65,9 +65,3 @@ module "module_gc" {
   public_ip = "${module.module_ec2.elastic_ip_of_web}"
 }
 
-# Lambda
-module "module_lambda" {
-  source      = "./modules/aws/lambda"
-  aws_profile = "${var.aws_profile}"
-  aws_region  = "${var.aws_lambda_region}"
-}

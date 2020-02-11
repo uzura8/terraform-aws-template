@@ -1,14 +1,6 @@
 # setup.conf
 
 ## Local
-### Lambda deploy
-LAMBDA_GIT_REPO="https://github.com/uzura8/gc-support-chat-lex-bot.git"
-LAMBDA_TMP_DIR_NAME="workspace"
-
-### Amazon Lex
-AWS_LEX_INTENT_NAME="FirstSupport"
-AWS_LEX_BOT_NAME="GCSupportBot"
-
 ### common
 GC_DIR_NAME="grateful_chat"
 GC_GIT_REPO="https://github.com/uzura8/expressbird.git"
@@ -26,9 +18,6 @@ GC_SESSION_SECRET_KEY="set-secret-key" # Use for session key
 #WEB_DOMAIN="chat.example.com" # Set site domain, if you have own domain name
 WEB_BASE_URL="/" # Set document root path
 WEB_SITE_NAME="Sample Chat Support Site" # Set site name
-
-##### AWS
-AWS_LEX_REGION="us-west-2"
 
 ### Remote
 NODE_VER="v10.17.0" # Set NodeJS Version
@@ -48,7 +37,4 @@ CLIENT_CONFS=(
   ".isSSL=${GC_USE_SSL}"
   ".baseUrl=\"${WEB_BASE_URL}\""
   ".siteName=\"${WEB_SITE_NAME}\""
-)
-AWS_LEX_CONFS=(
-  ".lex.credential.region=\"${AWS_LEX_REGION}\""
 )

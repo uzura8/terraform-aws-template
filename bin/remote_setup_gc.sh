@@ -105,6 +105,7 @@ sudo systemctl enable httpd
 
 sudo sed -e "s/^\(\s\+\)\(missingok\)/\1daily\n\1dateext\n\1rotate 16\n\1\2/" /etc/logrotate.d/httpd > /tmp/logrotate.d.httpd.$$
 sudo mv /tmp/logrotate.d.httpd.$$ /etc/logrotate.d/httpd
+sudo systemctl restart httpd
 
 ### Install Node.js ###
 sudo yum -y install gcc-c++
@@ -123,22 +124,3 @@ nvm install ${NODE_VER}
 nvm use ${NODE_VER}
 nvm alias default ${NODE_VER}
 
-### grateful_chat ###
-cd /home/ec2-user/
-git clone ${GC_GIT_REPO} ${GC_DIR_NAME}
-cd /home/ec2-user/${GC_DIR_NAME}
-git checkout origin/${GC_GIT_BRANCH}
-git checkout -b ${GC_GIT_BRANCH}
-npm install
-npm install pm2 -g
-cp /home/ec2-user/gc_configs/config-server.json src/server/config/config.json
-cp /home/ec2-user/gc_configs/aws-config.json src/server/config/
-cp /home/ec2-user/gc_configs/firebase-admin-credentials.json src/server/config/
-cp /home/ec2-user/gc_configs/firebase_config.js src/client/js/config/
-cp /home/ec2-user/gc_configs/config-client.json src/client/js/config/config.json
-./node_modules/.bin/webpack --mode production
-mysql -u ${RDS_USERNAME} -h ${RDS_EP} -P 3306 ${RDS_DB_NAME} < data/sql/setup.sql && echo 'Setup db'
-node server/create_admin_user.js ${GC_ADMIN_EMAIL} ${GC_ADMIN_PASSWORD} 'AdminUser'
-
-npm run start-pm2
-sudo systemctl restart httpd

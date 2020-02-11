@@ -1,3 +1,4 @@
 #!/bin/bash
 
-bash ./bin/lex_destroy.sh && terraform destroy -auto-approve
+#terraform destroy -auto-approve # Use only develop env. Not use on production!
+terraform destroy

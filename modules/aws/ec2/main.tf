@@ -10,10 +10,10 @@ variable "ec2_root_block_volume_size" {}
 variable "ec2_ebs_block_volume_type" {}
 variable "ec2_ebs_block_volume_size" {}
 
-resource "aws_key_pair" "key_pair" {
-  key_name   = "${var.key_name}"
-  public_key = "${var.public_key_value}"
-}
+#resource "aws_key_pair" "key_pair" {
+#  key_name   = "${var.key_name}"
+#  public_key = "${var.public_key_value}"
+#}
 
 # security_group
 resource "aws_security_group" "this" {
