@@ -49,7 +49,7 @@ sudo mkdir -p /var/www/sites
 #SERVISE_DOMAIN="ec2-13-112-39-117.ap-northeast-1.compute.amazonaws.com"
 sudo cp /etc/httpd/conf/httpd.conf /etc/httpd/conf/httpd.conf.ori
 #sed -e "s/^#ServerName www.example.com:80/ServerName ${WEB_DOMAIN}:80/" /etc/httpd/conf/httpd.conf > /tmp/httpd.conf.$$
-sudo sed -e "s/^\(AddDefaultCharset UTF-8\)/#\1/g" /tmp/httpd.conf > /tmp/httpd.conf.$$
+sudo sed -e "s/^\(AddDefaultCharset UTF-8\)/#\1/g" /etc/httpd/conf/httpd.conf > /tmp/httpd.conf.$$
 sudo sed -e "s/^\(\s\+\)\(CustomLog .\+\)$/\1\#\2/" /tmp/httpd.conf.$$ > /tmp/httpd.conf.2.$$
 
 sudo cat >> /tmp/httpd.conf.2.$$ <<EOF
