@@ -1,6 +1,6 @@
 #!/bin/bash
 
-NODE_VER=12.15.0
+NODE_VER=12.16.0
 SERVISE_DOMAIN=example.com
 
 #### locale setting  ###
@@ -121,18 +121,18 @@ nvm alias default ${NODE_VER}
 sudo yum install -y python3-devel python3-libs python3-setuptools python3-pip
 sudo yum install -y httpd-devel
 sudo pip3 install mod_wsgi
-#MOD_WSGI_PATH=`find /usr/local/ -type f -name "mod_wsgi*.so"`
-#sudo cat >> /etc/httpd/conf.d/virtualhost.conf <<EOF
-#LoadModule wsgi_module ${MOD_WSGI_PATH}
-#<VirtualHost *:80>
-#  ServerName ${SERVISE_DOMAIN}
-#  DocumentRoot /var/www/sites/${SERVISE_DOMAIN}
-#  WSGIScriptAlias / /var/www/sites/${SERVISE_DOMAIN}/adapter.wsgi
-#  <Directory "/var/www/sites/${SERVISE_DOMAIN}/">
-#    Order deny,allow
-#    Allow from all
-#  </Directory>
-#</VirtualHost>
-#EOF
-#
-#sudo systemctl restart httpd
+MOD_WSGI_PATH=`find /usr/local/ -type f -name "mod_wsgi*.so"`
+sudo cat >> /etc/httpd/conf.d/virtualhost.conf <<EOF
+LoadModule wsgi_module ${MOD_WSGI_PATH}
+<VirtualHost *:80>
+  ServerName ${SERVISE_DOMAIN}
+  DocumentRoot /var/www/sites/${SERVISE_DOMAIN}
+  WSGIScriptAlias / /var/www/sites/${SERVISE_DOMAIN}/adapter.wsgi
+  <Directory "/var/www/sites/${SERVISE_DOMAIN}/">
+    Order deny,allow
+    Allow from all
+  </Directory>
+</VirtualHost>
+EOF
+
+sudo systemctl restart httpd
