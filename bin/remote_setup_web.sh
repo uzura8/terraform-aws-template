@@ -36,8 +36,6 @@ sudo yum install -y mysql-community-client
 
 ### Install Apache ###
 sudo yum install -y httpd httpd-devel zlib-devel
-sudo systemctl start httpd
-sudo systemctl enable httpd
 
 #### Create Web directries
 sudo rm -f /etc/httpd/conf.d/welcome.conf
@@ -93,12 +91,10 @@ sudo cat > /etc/httpd/conf.d/virtualhost.conf <<EOF
 
 EOF
 
-sudo systemctl start httpd
-sudo systemctl enable httpd
-
 sudo sed -e "s/^\(\s\+\)\(missingok\)/\1daily\n\1dateext\n\1rotate 16\n\1\2/" /etc/logrotate.d/httpd > /tmp/logrotate.d.httpd.$$
 sudo mv /tmp/logrotate.d.httpd.$$ /etc/logrotate.d/httpd
-sudo systemctl restart httpd
+sudo systemctl start httpd
+sudo systemctl enable httpd
 
 ### Install Node.js ###
 sudo yum -y install gcc-c++
