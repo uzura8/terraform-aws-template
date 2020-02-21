@@ -108,7 +108,7 @@ SERVISE_DOMAIN=example.com
 bash ./bin/deploy.sh
 ```
 
-### Check GratefulChat on browser
+### Check on browser
 Get ec2 dns
 
 ```bash
