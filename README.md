@@ -1,15 +1,27 @@
 # terraform-aws-template
 
+## 事前準備
+### CNAME で登録するドメインの所有者確認
+* Google Search Console( https://search.google.com/search-console )にアクセス
+* TXT に登録する文字列をコピーし、gcs-site.example.com の TXT にペースト&DNSレコードに反映
+    + 参考: https://support.google.com/webmasters/answer/7687615?hl=ja#manage-owners
+* Google Search Console で「承認」を実行
+* gcs-site.example.com の CNAME に c.storage.googleapis.com を登録
+* billing 権限を持つサービスアカウントを ウェブマスターツールでドメイン所有者に追加する
+    + 参考: https://cloud.google.com/storage/docs/domain-name-verification?hl=ja
+
+### Create GCP Project
+Refer to [GCP docs](https://cloud.google.com/resource-manager/docs/creating-managing-projects) to create project
+
 ### Build enviroment of Terraform exicution
-You have to install AWS-CLI, terraform, jq, npm on enviroment of terraform execution
+You have to install gsutil, terraform on enviroment of terraform execution
 
 #### Setup enviroment on mac
 ```bash
-brew install jq
 brew install tfenv
 tfenv install 0.12.12
 ```
-Refer to [AWS docs](https://docs.aws.amazon.com/cli/latest/userguide/install-macos.html) to install AWS-CLI
+Refer to [GCP docs](https://cloud.google.com/storage/docs/gsutil_install) to install gsutil
 
 #### Setup enviroment on Ubuntu by Docker
 ##### Dockerfile
@@ -30,13 +42,9 @@ RUN yes|pip install awscli
 RUN apt-get -y update
 RUN apt-get install wget
 RUN apt-get -y install zip unzip
-RUN apt-get -y install jq
 RUN wget https://releases.hashicorp.com/terraform/0.12.12/terraform_0.12.12_linux_amd64.zip
 RUN unzip terraform_0.12.12_linux_amd64.zip
 RUN cp terraform /usr/local/bin
-RUN apt-get -y install nodejs npm
-RUN npm install n -g
-RUN n stable
 
 WORKDIR /root
 ```
@@ -58,7 +66,6 @@ Move to your work dir, and chekout this project.
 ```bash
 cp terraform.tfvars.sample terraform.tfvars
 vim terraform.tfvars
-vim bin/remote_setup_web.sh
 # Edit config for your env
 ```
 
@@ -66,60 +73,28 @@ vim bin/remote_setup_web.sh
 # terraform.tfvars
 
 # General
-aws_profile = "default"
-aws_region  = "ap-northeast-1"
+common_prefix = "tf-sg"
 
-common_prefix = "tf"
+gcp_credential_path = "Set your gcp credential json file path"
+gcp_project         = "Set your gcp project ID"
+gcp_region          = "Set gcp region"
 
-# VPC
-vpc_availability_zone = "ap-northeast-1a"
+gcs_class = "REGIONAL" # STANDARD, MULTI_REGIONAL, REGIONAL, NEARLINE, COLDLINE
 
-# EC2
-key_name                   = "your-ssh-key-name"
-ec2_ami                    = "ami-011facbea5ec0363b"
-ec2_instance_type          = "t2.micro"
-ec2_root_block_volume_type = "standard" # gp2 / io1 / standard
-ec2_root_block_volume_size = "15"
-ec2_ebs_block_volume_type  = "standard" # gp2 / io1 / standard
-ec2_ebs_block_volume_size  = "50"
+site_domain  = "example.com" # Apply this as strage name
+git_repo_url = "https://github.com/uzura8/simple-site-generator.git"
 
-# RDS
-aws_db_instance_type     = "db.t2.micro"
-aws_db_block_volume_type = "gp2" # gp2 / io1 / standard
-aws_db_allocated_storage = "20"  # GB
-aws_db_engine            = "mysql"
-aws_db_engine_version    = "5.7.28"
-aws_db_port              = "3306"
-aws_db_name              = "set-db_name"
-aws_db_username          = "set-db_admin"
-aws_db_password          = "set-db_password"
+python2_version = "2.7.15" # Set python2 version on your enviroment
+python3_version = "3.7.2" # Set python3 version on your enviroment
 ```
 
-```bash
-# bin/remote_setup_web.sh
-
-NODE_VER=12.15.0
-SERVISE_DOMAIN=example.com
-```
-
-### Deploy
+### Deploy Resources
 
 ```bash
 bash ./bin/deploy.sh
 ```
 
-### Check GratefulChat on browser
-Get ec2 dns
-
-```bash
-jq -r '.resources[]|select(.type == "aws_eip").instances[0].attributes.public_dns' terraform.tfstate
-
-# You get like ec2-xxx-xxx-xxx-xxx.ap-northeast-1.compute.amazonaws.com
-```
-And you request http://ec2-xxx-xxx-xxx-xxx.ap-northeast-1.compute.amazonaws.com on browser.
-
-
-## Destroy AWS Resources
+## Destroy Resources
 
 ```bash
 bash ./bin/destroy.sh

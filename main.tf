@@ -1,81 +1,33 @@
 variable "common_prefix" {}
-variable "aws_profile" {}
-variable "aws_region" {}
-#variable "aws_lambda_region" {}
-variable "aws_db_instance_type" {}
-variable "aws_db_allocated_storage" {}
-variable "aws_db_block_volume_type" {}
-variable "aws_db_engine" {}
-variable "aws_db_engine_version" {}
-variable "aws_db_port" {}
-variable "aws_db_username" {}
-variable "aws_db_password" {}
-variable "aws_db_name" {}
-variable "vpc_availability_zone" {}
-variable "key_name" {}
-variable "ec2_ami" {}
-variable "ec2_instance_type" {}
-variable "ec2_root_block_volume_type" {}
-variable "ec2_root_block_volume_size" {}
-variable "ec2_ebs_block_volume_type" {}
-variable "ec2_ebs_block_volume_size" {}
+variable "gcp_credential_path" {}
+variable "gcp_project" {}
+variable "gcp_region" {}
+variable "site_domain" {}
+variable "gcs_class" {}
+variable "git_repo_url" {}
+variable "python2_version" {}
+variable "python3_version" {}
 
-provider "aws" {
-  profile = "${var.aws_profile}"
-  region  = "${var.aws_region}"
+provider "google" {
+  credentials = "${file("${var.gcp_credential_path}")}"
+  project     = "${var.gcp_project}"
+  region      = "${var.gcp_region}"
 }
 
-## Local
-#module "module_keygen" {
-#  source   = "./modules/local/keygen"
-#  key_name = "${var.key_name}"
-#}
-
-# VPC
-module "module_vpc" {
-  source            = "./modules/aws/vpc"
-  availability_zone = "${var.vpc_availability_zone}"
+module "module_gcp_strage" {
+  source      = "./modules/gcp/strage"
+  site_domain = "${var.site_domain}"
+  gcp_project = "${var.gcp_project}"
+  gcp_region  = "${var.gcp_region}"
+  gcs_class   = "${var.gcs_class}"
 }
 
-# EC2
-module "module_ec2" {
-  source                     = "./modules/aws/ec2"
-  vpc_id                     = "${module.module_vpc.vpc_id}"
-  subnet_public_web_id       = "${module.module_vpc.subnet_public_web_id}"
-  key_name                   = "${var.key_name}"
-  common_prefix              = "${var.common_prefix}"
-  ec2_ami                    = "${var.ec2_ami}"
-  ec2_instance_type          = "${var.ec2_instance_type}"
-  ec2_root_block_volume_type = "${var.ec2_root_block_volume_type}"
-  ec2_root_block_volume_size = "${var.ec2_root_block_volume_size}"
-  ec2_ebs_block_volume_type  = "${var.ec2_ebs_block_volume_type}"
-  ec2_ebs_block_volume_size  = "${var.ec2_ebs_block_volume_size}"
-  #public_key_value           = "${module.module_keygen.public_key_openssh}"
-}
-
-# RDS
-module "module_rds" {
-  source                = "./modules/aws/rds"
-  vpc_id                = "${module.module_vpc.vpc_id}"
-  security_group_web_id = "${module.module_ec2.security_group_web_id}"
-  subnet_group_db_name  = "${module.module_vpc.subnet_group_db_name}"
-  db_instance_type      = "${var.aws_db_instance_type}"
-  db_allocated_storage  = "${var.aws_db_allocated_storage}"
-  db_block_volume_type  = "${var.aws_db_block_volume_type}"
-  db_engine             = "${var.aws_db_engine}"
-  db_engine_version     = "${var.aws_db_engine_version}"
-  db_port               = "${var.aws_db_port}"
-  db_username           = "${var.aws_db_username}"
-  db_password           = "${var.aws_db_password}"
-  db_name               = "${var.aws_db_name}"
-  common_prefix         = "${var.common_prefix}"
-}
-
-# Setup GC
-module "module_gc" {
-  source    = "./modules/remote/gc"
-  key_name  = "${var.key_name}"
-  rds_obj   = "${module.module_rds.rds_obj}"
-  public_ip = "${module.module_ec2.elastic_ip_of_web}"
+# Local
+module "module_site_generator" {
+  source          = "./modules/local/site_generator"
+  git_repo_url    = "${var.git_repo_url}"
+  strage_name     = "${module.module_gcp_strage.strage_name}"
+  python2_version = "${var.python2_version}"
+  python3_version = "${var.python3_version}"
 }
 
