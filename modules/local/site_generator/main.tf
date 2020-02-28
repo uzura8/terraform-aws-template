@@ -21,4 +21,8 @@ resource "null_resource" "local-site-genarater" {
   provisioner "local-exec" {
     command = "gsutil cp -r var/site-generator/public/* gs://${var.strage_name}"
   }
+
+  provisioner "local-exec" {
+    command = "gsutil acl ch -r -u AllUsers:R gs://${var.strage_name}"
+  }
 }

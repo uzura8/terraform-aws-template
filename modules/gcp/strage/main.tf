@@ -28,10 +28,3 @@ resource "google_storage_bucket_access_control" "public_rule" {
   entity     = "allUsers"
 }
 
-resource "google_storage_default_object_access_control" "public_rule_default" {
-  depends_on = [google_storage_bucket.site-file-store]
-  bucket     = google_storage_bucket.site-file-store.name
-  role       = "READER"
-  entity     = "allUsers"
-}
-
