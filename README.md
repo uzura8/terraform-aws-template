@@ -101,7 +101,7 @@ gcp_region          = "Set gcp region"
 
 gcs_class = "REGIONAL" # STANDARD, MULTI_REGIONAL, REGIONAL, NEARLINE, COLDLINE
 
-site_domain  = "example.com" # Apply this as strage name
+site_domain  = "example-your-domain.com" # Apply this as strage name
 git_repo_url = "https://github.com/uzura8/simple-site-generator.git"
 ```
 
@@ -128,5 +128,5 @@ python3 builder.py
 
 # And upload to GCP Strage
 cd ../../
-bash bin/upload.sh your-domain.com
+bash bin/upload.sh example-your-domain.com
 ````
