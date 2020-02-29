@@ -18,7 +18,7 @@ Refer to [GCP docs](https://cloud.google.com/resource-manager/docs/creating-mana
 
 
 
-### Build enviroment of Terraform exicution
+### Build enviroment of Terraform execution
 You have to install gsutil, terraform on enviroment of terraform execution
 
 
