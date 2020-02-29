@@ -1,29 +1,40 @@
 # terraform-aws-template
 
-## 事前準備
-### CNAME で登録するドメインの所有者確認
-* Google Search Console( https://search.google.com/search-console )にアクセス
-* TXT に登録する文字列をコピーし、gcs-site.example.com の TXT にペースト&DNSレコードに反映
-    + 参考: https://support.google.com/webmasters/answer/7687615?hl=ja#manage-owners
-* Google Search Console で「承認」を実行
-* gcs-site.example.com の CNAME に c.storage.googleapis.com を登録
-* billing 権限を持つサービスアカウントを ウェブマスターツールでドメイン所有者に追加する
-    + 参考: https://cloud.google.com/storage/docs/domain-name-verification?hl=ja
+## Preparation
+### Verify the owner of the domain you register with CNAME
+* Access to Google Search Console( https://search.google.com/search-console )
+* Register TXT your domain of DNS record
+    + Refer to: https://support.google.com/webmasters/answer/7687615?hl=ja#manage-owners
+* Execute "Approve" on Google Search Console
+* Register "c.storage.googleapis.com" CNAME of your domain 
+* Add a service account with billing privileges to a domain owner in Webmaster Tools
+    * Refer to: https://cloud.google.com/storage/docs/domain-name-verification?hl=ja
+
+
 
 ### Create GCP Project
+
 Refer to [GCP docs](https://cloud.google.com/resource-manager/docs/creating-managing-projects) to create project
+
+
 
 ### Build enviroment of Terraform exicution
 You have to install gsutil, terraform on enviroment of terraform execution
 
+
+
 #### Setup enviroment on mac
+
 ```bash
 brew install tfenv
 tfenv install 0.12.12
 ```
 Refer to [GCP docs](https://cloud.google.com/storage/docs/gsutil_install) to install gsutil
 
+
+
 #### Setup enviroment on Ubuntu by Docker
+
 ##### Dockerfile
 
 ```
@@ -65,6 +76,8 @@ docker run -v /Users/hogehoge/.config/gcloud:/root/.config/gcloud -v /Users/hoge
 ```
 Execute run.sh  
 Move to your work dir, and chekout this project.
+
+
 
 
 ## Setup AWS Resources by Terraform
