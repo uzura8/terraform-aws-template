@@ -1,4 +1,4 @@
-# terraform-aws-template
+# terraform-illuststrap-template
 
 ## Preparation
 ### Verify the owner of the domain you register with CNAME
@@ -111,9 +111,22 @@ git_repo_url = "https://github.com/uzura8/simple-site-generator.git"
 bash ./bin/deploy.sh
 ```
 
-## Destroy Resources
+### Destroy Resources
 
 ```bash
 bash ./bin/destroy.sh
 ```
 
+
+
+## Update Site Contents
+
+````bash
+cd var/site-generator/
+# Edit content files under content dir and build
+python3 builder.py
+
+# And upload to GCP Strage
+cd ../../
+bash bin/upload.sh your-domain.com
+````
