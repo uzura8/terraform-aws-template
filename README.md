@@ -27,7 +27,9 @@ Refer to [GCP docs](https://cloud.google.com/storage/docs/gsutil_install) to ins
 ##### Dockerfile
 
 ```
+RUN chsh -s /usr/bin/zsh
 FROM ubuntu:18.04
+USER root
 RUN apt-get -y update
 RUN apt-get -y install software-properties-common
 RUN yes | add-apt-repository ppa:jonathonf/vim
@@ -35,13 +37,18 @@ RUN apt-get -y update
 RUN apt-get -y install zsh
 RUN chsh -s /usr/bin/zsh
 RUN /usr/bin/zsh
-RUN apt-get -y install git docker python vim neovim
-RUN apt-get install -y python-pip
+RUN apt-get -y install git docker vim neovim
+RUN apt-get -y install python3.6-dev
+RUN apt-get -y install python3-pip
 RUN pip install --upgrade pip
-RUN yes|pip install awscli
 RUN apt-get -y update
 RUN apt-get install wget
 RUN apt-get -y install zip unzip
+RUN apt-get install -y curl
+RUN export CLOUD_SDK_REPO="cloud-sdk-$(lsb_release -c -s)" && \
+    echo "deb http://packages.cloud.google.com/apt $CLOUD_SDK_REPO main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list && \
+    curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add - && \
+    apt-get update -y && apt-get install google-cloud-sdk -y
 RUN wget https://releases.hashicorp.com/terraform/0.12.12/terraform_0.12.12_linux_amd64.zip
 RUN unzip terraform_0.12.12_linux_amd64.zip
 RUN cp terraform /usr/local/bin
@@ -51,10 +58,10 @@ WORKDIR /root
 
 ##### run.sh
 ```bash
-docker build -t ubuntu_tf_gc .
-docker stop ubuntu_tf_gc_con
-docker rm ubuntu_tf_gc_con
-docker run -v /user-home-dir-path/.aws:/root/.aws -it --name ubuntu_tf_gc_con ubuntu_tf_gc:latest /bin/bash
+docker build -t ubuntu_terraform_sg .
+docker stop ubuntu_terraform_sg_con
+docker rm ubuntu_terraform_sg_con
+docker run -v /Users/hogehoge/.config/gcloud:/root/.config/gcloud -v /Users/hogehoge/.vim:/root/.vim -it --name ubuntu_terraform_sg_con ubuntu_terraform_sg:latest /bin/bash
 ```
 Execute run.sh  
 Move to your work dir, and chekout this project.
@@ -83,9 +90,6 @@ gcs_class = "REGIONAL" # STANDARD, MULTI_REGIONAL, REGIONAL, NEARLINE, COLDLINE
 
 site_domain  = "example.com" # Apply this as strage name
 git_repo_url = "https://github.com/uzura8/simple-site-generator.git"
-
-python2_version = "2.7.15" # Set python2 version on your enviroment
-python3_version = "3.7.2" # Set python3 version on your enviroment
 ```
 
 ### Deploy Resources

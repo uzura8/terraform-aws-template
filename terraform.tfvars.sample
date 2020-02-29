@@ -10,6 +10,7 @@ gcs_class = "REGIONAL" # STANDARD, MULTI_REGIONAL, REGIONAL, NEARLINE, COLDLINE
 site_domain  = "example.com" # Apply this as strage name
 git_repo_url = "https://github.com/uzura8/simple-site-generator.git"
 
-python2_version = "2.7.15" # Set python2 version on your enviroment
-python3_version = "3.7.2" # Set python3 version on your enviroment
+## Set this for pyenv on Mac
+#python2_version = "2.x.x" # Set python2 version on your enviroment
+#python3_version = "3.x.x" # Set python3 version on your enviroment
 

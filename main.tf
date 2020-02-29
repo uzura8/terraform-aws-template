@@ -5,8 +5,9 @@ variable "gcp_region" {}
 variable "site_domain" {}
 variable "gcs_class" {}
 variable "git_repo_url" {}
-variable "python2_version" {}
-variable "python3_version" {}
+## Set this for pyenv on Mac
+#variable "python2_version" {}
+#variable "python3_version" {}
 
 provider "google" {
   credentials = "${file("${var.gcp_credential_path}")}"
@@ -24,10 +25,10 @@ module "module_gcp_strage" {
 
 # Local
 module "module_site_generator" {
-  source          = "./modules/local/site_generator"
-  git_repo_url    = "${var.git_repo_url}"
-  strage_name     = "${module.module_gcp_strage.strage_name}"
-  python2_version = "${var.python2_version}"
-  python3_version = "${var.python3_version}"
+  source       = "./modules/local/site_generator"
+  git_repo_url = "${var.git_repo_url}"
+  strage_name  = "${module.module_gcp_strage.strage_name}"
+  #python2_version = "${var.python2_version}"
+  #python3_version = "${var.python3_version}"
 }
 
