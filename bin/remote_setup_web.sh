@@ -1,7 +1,7 @@
 #!/bin/bash
 
 NODE_VER=12.16.0
-SERVISE_DOMAIN=example.com
+SERVICE_DOMAIN=example.com
 
 #### locale setting  ###
 sudo timedatectl set-timezone Asia/Tokyo
@@ -44,9 +44,7 @@ sudo rm -f /var/www/error/noindex.html
 sudo mkdir -p /var/www/sites
 
 #### Apache setting
-#SERVISE_DOMAIN="ec2-13-112-39-117.ap-northeast-1.compute.amazonaws.com"
 sudo cp /etc/httpd/conf/httpd.conf /etc/httpd/conf/httpd.conf.ori
-#sed -e "s/^#ServerName www.example.com:80/ServerName ${WEB_DOMAIN}:80/" /etc/httpd/conf/httpd.conf > /tmp/httpd.conf.$$
 sudo sed -e "s/^\(AddDefaultCharset UTF-8\)/#\1/g" /etc/httpd/conf/httpd.conf > /tmp/httpd.conf.$$
 sudo sed -e "s/^\(\s\+\)\(CustomLog .\+\)$/\1\#\2/" /tmp/httpd.conf.$$ > /tmp/httpd.conf.2.$$
 
@@ -121,10 +119,10 @@ MOD_WSGI_PATH=`find /usr/local/ -type f -name "mod_wsgi*.so"`
 sudo cat >> /etc/httpd/conf.d/virtualhost.conf <<EOF
 LoadModule wsgi_module ${MOD_WSGI_PATH}
 <VirtualHost *:80>
-  ServerName ${SERVISE_DOMAIN}
-  DocumentRoot /var/www/sites/${SERVISE_DOMAIN}
-  WSGIScriptAlias / /var/www/sites/${SERVISE_DOMAIN}/adapter.wsgi
-  <Directory "/var/www/sites/${SERVISE_DOMAIN}/">
+  ServerName ${SERVICE_DOMAIN}
+  DocumentRoot /var/www/sites/${SERVICE_DOMAIN}
+  WSGIScriptAlias / /var/www/sites/${SERVICE_DOMAIN}/adapter.wsgi
+  <Directory "/var/www/sites/${SERVICE_DOMAIN}/">
     Order deny,allow
     Allow from all
   </Directory>

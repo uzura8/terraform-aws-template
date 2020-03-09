@@ -118,6 +118,19 @@ jq -r '.resources[]|select(.type == "aws_eip").instances[0].attributes.public_dn
 ```
 And you request http://ec2-xxx-xxx-xxx-xxx.ap-northeast-1.compute.amazonaws.com on browser.
 
+#### Other informations after deploy
+Get RDS address
+
+```bash
+jq -r '.resources[]|select(.type == "aws_db_instance").instances[0].attributes.address' terraform.tfstate
+```
+
+Get Elastick IP address
+
+```bash
+jq -r '.resources[]|select(.type == "aws_eip")|.instances[0] | .attributes | .public_ip' terraform.tfstate
+```
+
 
 ## Destroy AWS Resources
 
