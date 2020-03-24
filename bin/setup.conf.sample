@@ -20,7 +20,7 @@ GC_PORT="8080"
 GC_USE_SSL="false"
 
 #### server
-GC_SESSION_SECRET_KEY="set-secret-key" # Use for session key
+GC_SESSION_SECRET_KEY="set-secret-key" # Use for session key. You have to change this!
 
 #### client
 #WEB_DOMAIN="chat.example.com" # Set site domain, if you have own domain name

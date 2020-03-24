@@ -48,9 +48,18 @@ docker stop ubuntu_tf_gc_con
 docker rm ubuntu_tf_gc_con
 docker run -v /user-home-dir-path/.aws:/root/.aws -it --name ubuntu_tf_gc_con ubuntu_tf_gc:latest /bin/bash
 ```
-Execute run.sh  
-Move to your work dir, and chekout this project.
 
+Execute run.sh  
+Move to your work dir on Docker container, and chekout this project.
+If you have no need to push this repository, you use https protocol.
+
+```bash
+# On Docer Container
+
+cd /your-work-dir/
+git clone https://github.com/**********.git dir-name
+cd dir-name
+```
 
 ### Firebase registration
 
@@ -114,10 +123,12 @@ Press "Service account" tab on "Settings" page, and press "Generate new private 
 
 
 
-After downloaded, move the file to "src/server/config/" and rename "firebase-admin-credentials.json"
+After downloaded, copy this file and paste to var/gc_configs/firebase-admin-credentials.json
 
 ```bash
-mv /path-to-downloaded-file var/gc_configs/firebase-admin-credentials.json
+vi var/gc_configs/firebase-admin-credentials.json
+
+# Paste credentials json
 ```
 
 
@@ -145,8 +156,8 @@ Register "Email/Password" and "Anonymous" for "Sign-in providers"
 ```bash
 cp terraform.tfvars.sample terraform.tfvars
 cp bin/setup.conf.sample bin/setup.conf
-vim terraform.tfvars
-vim bin/setup.conf
+vi terraform.tfvars
+vi bin/setup.conf
 # Edit config for your env
 ```
 
@@ -154,7 +165,7 @@ vim bin/setup.conf
 # terraform.tfvars
 
 # General
-aws_profile = "default"
+aws_profile = "default" #set your profile name
 aws_region  = "ap-northeast-1"
 
 # RDS
@@ -169,23 +180,40 @@ aws_lambda_region = "us-west-2"
 ```bash
 # bin/setup.conf
 
+## Local
+### Lambda deploy
+LAMBDA_GIT_REPO="https://github.com/uzura8/gc-support-chat-lex-bot.git"
+LAMBDA_TMP_DIR_NAME="workspace"
+
+### Amazon Lex
+AWS_LEX_INTENT_NAME="FirstSupport"
+AWS_LEX_BOT_NAME="GCSupportBot"
+
+### common
+GC_DIR_NAME="grateful_chat"
+GC_GIT_REPO="https://github.com/uzura8/expressbird.git"
+GC_GIT_BRANCH="dev_gc"
+
 ### Local
 #### common
-GC_PORT="3000"
-GC_USE_SSL="true"
+GC_PORT="8080"
+GC_USE_SSL="false"
 
 #### server
-GC_SESSION_SECRET_KEY="set-secret-key" # Use for session key
+GC_SESSION_SECRET_KEY="set-secret-key" # Use for session key. You have to change this!
 
 #### client
-#GC_DOMAIN="chat.example.com" # Set site domain
-GC_BASE_URL="/" # Set document root path
-GC_SITE_NAME="Sample Chat Support Site" # Set site name
+#WEB_DOMAIN="chat.example.com" # Set site domain, if you have own domain name
+WEB_BASE_URL="/" # Set document root path
+WEB_SITE_NAME="Sample Chat Support Site" # Set site name
 
 ##### AWS
-AWS_LEX_ACCESS_KEY="set-your-aws_access_key_id"
-AWS_LEX_SECRET_KEY="set-your-aws_secret_access_key"
 AWS_LEX_REGION="us-west-2"
+
+### Remote
+NODE_VER="v10.17.0" # Set NodeJS Version
+GC_ADMIN_EMAIL="admin@example.com" # Use for GC login by Admin user
+GC_ADMIN_PASSWORD="password"       # Use for GC login by Admin user
 ```
 
 ### Deploy
