@@ -47,7 +47,7 @@ resource "aws_route_table_association" "public_web" {
 resource "aws_subnet" "private_db1" {
   vpc_id            = "${aws_vpc.this.id}"
   cidr_block        = "10.0.1.0/24"
-  availability_zone = "ap-northeast-1b"
+  availability_zone = "${var.availability_zone}"
   tags = {
     Name = "aws-private-db1-subnet"
   }
@@ -56,7 +56,7 @@ resource "aws_subnet" "private_db1" {
 resource "aws_subnet" "private_db2" {
   vpc_id            = "${aws_vpc.this.id}"
   cidr_block        = "10.0.2.0/24"
-  availability_zone = "ap-northeast-1c"
+  availability_zone = "${var.availability_zone}"
   tags = {
     Name = "aws-private-db2-subnet"
   }
