@@ -162,16 +162,25 @@ vi bin/setup.conf
 ```
 
 ```bash
-# terraform.tfvars
-
 # General
-aws_profile = "default" #set your profile name
+aws_profile = "default"
 aws_region  = "ap-northeast-1"
+
+common_prefix = "tf" # If set this, apply to AWS resource name
+
+# EC2
+key_name = "greatefulchat"
+ec2_ami                    = "ami-052652af12b58691f"  # Set this latest Amazon Linux 2(64bit x86) AMI
+ec2_instance_type          = "t2.micro"
+ec2_root_block_volume_type = "standard" # gp2 / io1 / standard
+ec2_root_block_volume_size = "15"
+ec2_ebs_block_volume_type  = "standard" # gp2 / io1 / standard
+ec2_ebs_block_volume_size  = "50"
 
 # RDS
 aws_db_name     = "dbgc"
 aws_db_username = "db_admin"
-aws_db_password = ""
+aws_db_password = "set-password"
 
 # Lambda
 aws_lambda_region = "us-west-2"
