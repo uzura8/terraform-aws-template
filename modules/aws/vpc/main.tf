@@ -1,3 +1,5 @@
+variable "availability_zone" {}
+
 resource "aws_vpc" "this" {
   cidr_block           = "10.0.0.0/16"
   instance_tenancy     = "default"
@@ -29,7 +31,7 @@ resource "aws_route_table" "public_rt" {
 resource "aws_subnet" "public_web" {
   vpc_id                  = "${aws_vpc.this.id}"
   cidr_block              = "10.0.0.0/24"
-  availability_zone       = "ap-northeast-1b"
+  availability_zone       = "${var.availability_zone}"
   map_public_ip_on_launch = true
   tags = {
     Name = "aws-public-web-subnet"

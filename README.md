@@ -168,9 +168,12 @@ aws_region  = "ap-northeast-1"
 
 common_prefix = "tf" # If set this, apply to AWS resource name
 
+# VPC
+vpc_availability_zone = "ap-northeast-1b" # Set active availabilityZone
+
 # EC2
 key_name = "greatefulchat"
-ec2_ami                    = "ami-052652af12b58691f"  # Set this latest Amazon Linux 2(64bit x86) AMI
+ec2_ami                    = "ami-052652af12b58691f" # Set this latest Amazon Linux 2(64bit x86) AMI
 ec2_instance_type          = "t2.micro"
 ec2_root_block_volume_type = "standard" # gp2 / io1 / standard
 ec2_root_block_volume_size = "15"
