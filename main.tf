@@ -6,6 +6,7 @@ variable "aws_db_username" {}
 variable "aws_db_password" {}
 variable "aws_db_name" {}
 variable "vpc_availability_zone" {}
+variable "vpc_availability_zone_db2" {}
 variable "key_name" {}
 variable "ec2_ami" {}
 variable "ec2_instance_type" {}
@@ -27,8 +28,9 @@ module "module_keygen" {
 
 # VPC
 module "module_vpc" {
-  source            = "./modules/aws/vpc"
-  availability_zone = "${var.vpc_availability_zone}"
+  source                = "./modules/aws/vpc"
+  availability_zone     = "${var.vpc_availability_zone}"
+  availability_zone_db2 = "${var.vpc_availability_zone_db2}"
 }
 
 # EC2

@@ -6,6 +6,7 @@ common_prefix = "tf" # If set this, apply to AWS resource name
 
 # VPC
 vpc_availability_zone = "ap-northeast-1b" # Set active availabilityZone
+vpc_availability_zone_db2 = "ap-northeast-1a" # Set active availabilityZone
 
 # EC2
 key_name = "greatefulchat"

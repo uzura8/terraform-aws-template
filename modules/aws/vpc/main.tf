@@ -1,4 +1,5 @@
 variable "availability_zone" {}
+variable "availability_zone_db2" {}
 
 resource "aws_vpc" "this" {
   cidr_block           = "10.0.0.0/16"
@@ -56,7 +57,7 @@ resource "aws_subnet" "private_db1" {
 resource "aws_subnet" "private_db2" {
   vpc_id            = "${aws_vpc.this.id}"
   cidr_block        = "10.0.2.0/24"
-  availability_zone = "${var.availability_zone}"
+  availability_zone = "${var.availability_zone_db2}"
   tags = {
     Name = "aws-private-db2-subnet"
   }
