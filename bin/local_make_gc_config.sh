@@ -73,7 +73,7 @@ mv $output_file aws-config.json
 cd ../../
 TF_STATE_FILE="`dirname $0`/../terraform.tfstate"
 EC2_PUBLIC_DNS=`jq -r '.resources[]|select(.type == "aws_eip")|.instances[0] | .attributes | .public_dns' ${TF_STATE_FILE}`
-RDS_EP=`jq -r '.resources|.[]|select(.name=="db")|.instances|.[]|select(.schema_version==0)|.attributes.address' $TF_STATE_FILE`
+RDS_EP=`jq -r '[.resources|.[]|select(.name=="db")|.instances[]][0]|.attributes.address' $TF_STATE_FILE`
 RDS_DB_NAME=`tf_conf aws_db_name`
 RDS_USERNAME=`tf_conf aws_db_username`
 RDS_PASSWORD=`tf_conf aws_db_password`
