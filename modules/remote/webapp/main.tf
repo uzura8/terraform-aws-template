@@ -35,11 +35,11 @@ locals {
 #  }
 #}
 
-resource "null_resource" "ec2-ssh-setup-gc" {
+resource "null_resource" "ec2-ssh-setup-webapp" {
   depends_on = [var.ec2_obj]
   provisioner "remote-exec" {
     scripts = [
-      "bin/remote_setup_web.sh"
+      "bin/remote_setup_webapp.sh"
     ]
 
     connection {

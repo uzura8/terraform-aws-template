@@ -7,7 +7,7 @@ You have to install AWS-CLI, terraform, jq, npm on enviroment of terraform execu
 ```bash
 brew install jq
 brew install tfenv
-tfenv install 0.12.12
+tfenv install 0.12.24
 ```
 Refer to [AWS docs](https://docs.aws.amazon.com/cli/latest/userguide/install-macos.html) to install AWS-CLI
 
@@ -31,8 +31,8 @@ RUN apt-get -y update
 RUN apt-get install wget
 RUN apt-get -y install zip unzip
 RUN apt-get -y install jq
-RUN wget https://releases.hashicorp.com/terraform/0.12.12/terraform_0.12.12_linux_amd64.zip
-RUN unzip terraform_0.12.12_linux_amd64.zip
+RUN wget https://releases.hashicorp.com/terraform/0.12.24/terraform_0.12.24_linux_amd64.zip
+RUN unzip terraform_0.12.24_linux_amd64.zip
 RUN cp terraform /usr/local/bin
 RUN apt-get -y install nodejs npm
 RUN npm install n -g
@@ -43,10 +43,10 @@ WORKDIR /root
 
 ##### run.sh
 ```bash
-docker build -t ubuntu_tf_gc .
-docker stop ubuntu_tf_gc_con
-docker rm ubuntu_tf_gc_con
-docker run -v /user-home-dir-path/.aws:/root/.aws -it --name ubuntu_tf_gc_con ubuntu_tf_gc:latest /bin/bash
+docker build -t ubuntu_tf_webapp .
+docker stop ubuntu_tf_webapp_con
+docker rm ubuntu_tf_webapp_con
+docker run -v /user-home-dir-path/.aws:/root/.aws -it --name ubuntu_tf_webapp_con ubuntu_tf_webapp:latest /bin/bash
 ```
 Execute run.sh  
 Move to your work dir, and chekout this project.
@@ -58,7 +58,7 @@ Move to your work dir, and chekout this project.
 ```bash
 cp terraform.tfvars.sample terraform.tfvars
 vim terraform.tfvars
-vim bin/remote_setup_web.sh
+vim bin/remote_setup_webapp.sh
 # Edit config for your env
 ```
 
@@ -72,16 +72,17 @@ aws_region  = "ap-northeast-1"
 common_prefix = "tf"
 
 # VPC
-vpc_availability_zone = "ap-northeast-1a"
+vpc_availability_zones = ["ap-northeast-1c", "ap-northeast-1d"]
 
 # EC2
-key_name                   = "your-ssh-key-name"
-ec2_ami                    = "ami-011facbea5ec0363b"
+key_name                   = "your-ssh-keypair-name"
+key_file_path              = "~/.ssh/your-ssh-key-file-name"
+security_ssh_ingress_cidrs = ["0.0.0.0/0"]          # Set by Array type
 ec2_instance_type          = "t2.micro"
-ec2_root_block_volume_type = "standard" # gp2 / io1 / standard
-ec2_root_block_volume_size = "15"
-ec2_ebs_block_volume_type  = "standard" # gp2 / io1 / standard
-ec2_ebs_block_volume_size  = "50"
+ec2_root_block_volume_type = "gp2" # gp2 / io1 / standard
+ec2_root_block_volume_size = "20"
+#ec2_ebs_block_volume_type  = "gp2" # gp2 / io1 / standard
+#ec2_ebs_block_volume_size  = "50"
 
 # RDS
 aws_db_instance_type     = "db.t2.micro"
@@ -90,7 +91,7 @@ aws_db_allocated_storage = "20"  # GB
 aws_db_engine            = "mysql"
 aws_db_engine_version    = "5.7.28"
 aws_db_port              = "3306"
-aws_db_name              = "set-db_name"
+aws_db_name              = "" # Set this, if create db
 aws_db_username          = "set-db_admin"
 aws_db_password          = "set-db_password"
 ```

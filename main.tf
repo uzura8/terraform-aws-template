@@ -71,9 +71,9 @@ module "module_rds" {
   common_prefix         = var.common_prefix
 }
 
-# Setup GC
-module "module_gc" {
-  source        = "./modules/remote/gc"
+# Setup WebApp
+module "module_webapp" {
+  source        = "./modules/remote/webapp"
   key_name      = var.key_name
   key_file_path = var.key_file_path
   public_ip     = module.module_ec2.elastic_ip_of_web
