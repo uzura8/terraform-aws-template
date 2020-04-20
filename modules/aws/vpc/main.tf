@@ -10,15 +10,19 @@ resource "aws_vpc" "this" {
   instance_tenancy     = "default"
   enable_dns_support   = true
   enable_dns_hostnames = true
+
   tags = {
-    Name = "aws-vpc"
+    Name      = join("-", [var.common_prefix, "vpc"])
+    ManagedBy = "terraform"
   }
 }
 
 resource "aws_internet_gateway" "this" {
   vpc_id = aws_vpc.this.id
+
   tags = {
-    Name = "aws-gw"
+    Name      = join("-", [var.common_prefix, "igw"])
+    ManagedBy = "terraform"
   }
 }
 
@@ -28,8 +32,10 @@ resource "aws_route_table" "public_rt" {
     cidr_block = "0.0.0.0/0"
     gateway_id = aws_internet_gateway.this.id
   }
+
   tags = {
-    Name = "aws-public-rt"
+    Name      = join("-", [var.common_prefix, "rtb", "public"])
+    ManagedBy = "terraform"
   }
 }
 
@@ -39,8 +45,10 @@ resource "aws_subnet" "public_web" {
   availability_zone       = var.availability_zones[0]
   map_public_ip_on_launch = true
   #availability_zone = data.aws_availability_zones.available.names[0]
+
   tags = {
-    Name = "aws-public-web-subnet"
+    Name      = join("-", [var.common_prefix, "subnet", "web"])
+    ManagedBy = "terraform"
   }
 }
 
@@ -55,8 +63,10 @@ resource "aws_subnet" "private_db1" {
   cidr_block        = "10.0.1.0/24"
   availability_zone = var.availability_zones[0]
   #availability_zone = data.aws_availability_zones.available.names[0]
+
   tags = {
-    Name = "aws-private-db1-subnet"
+    Name      = join("-", [var.common_prefix, "subnet", "db-1"])
+    ManagedBy = "terraform"
   }
 }
 
@@ -65,15 +75,19 @@ resource "aws_subnet" "private_db2" {
   cidr_block        = "10.0.2.0/24"
   availability_zone = var.availability_zones[1]
   #availability_zone = data.aws_availability_zones.available.names[1]
+
   tags = {
-    Name = "aws-private-db2-subnet"
+    Name      = join("-", [var.common_prefix, "subnet", "db-2"])
+    ManagedBy = "terraform"
   }
 }
 
 resource "aws_db_subnet_group" "main" {
   description = "It is a DB subnet group on tf_vpc."
   subnet_ids  = [aws_subnet.private_db1.id, aws_subnet.private_db2.id]
+
   tags = {
-    Name = "aws-dbsubnet"
+    Name      = join("-", [var.common_prefix, "subnet", "db"])
+    ManagedBy = "terraform"
   }
 }

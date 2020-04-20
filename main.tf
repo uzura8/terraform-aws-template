@@ -34,6 +34,7 @@ provider "aws" {
 # VPC
 module "module_vpc" {
   source             = "./modules/aws/vpc"
+  common_prefix      = var.common_prefix
   availability_zones = var.vpc_availability_zones
 }
 

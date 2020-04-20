@@ -17,11 +17,12 @@ variable "ec2_root_block_volume_size" {}
 
 # security_group
 resource "aws_security_group" "this" {
-  name        = join("-", [var.common_prefix, "aws-web-sg"])
+  name        = join("-", [var.common_prefix, "sg-web"])
   description = "It is a security group on http of aws_vpc"
   vpc_id      = var.vpc_id
   tags = {
-    Name = join("-", [var.common_prefix, "aws-web"])
+    Name      = join("-", [var.common_prefix, "sg-web"])
+    ManagedBy = "terraform"
   }
 }
 
@@ -101,8 +102,9 @@ resource "aws_instance" "web1" {
   }
 
   tags = {
-    Name = join("-", [var.common_prefix, "aws-ec2-web1"])
-    Role = "web1"
+    Name      = join("-", [var.common_prefix, "ec2-web1"])
+    Role      = "web1"
+    ManagedBy = "terraform"
   }
 
   #ebs_block_device {
@@ -119,6 +121,7 @@ resource "aws_eip" "this" {
   instance = aws_instance.web1.id
   vpc      = true
   tags = {
-    Name = join("-", [var.common_prefix, "aws-ec2-web1"])
+    Name      = join("-", [var.common_prefix, "eip-web1"])
+    ManagedBy = "terraform"
   }
 }

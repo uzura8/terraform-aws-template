@@ -13,11 +13,13 @@ variable "db_name" {}
 variable "common_prefix" {}
 
 resource "aws_security_group" "this" {
-  name        = "aws-db-sg"
+  name        = join("-", [var.common_prefix, "sg-rds"])
   description = "It is a security group on db of aws_vpc."
   vpc_id      = var.vpc_id
+
   tags = {
-    Name = join("-", [var.common_prefix, "aws-rds"])
+    Name      = join("-", [var.common_prefix, "sg-rds"])
+    ManagedBy = "terraform"
   }
 }
 
@@ -31,7 +33,7 @@ resource "aws_security_group_rule" "db" {
 }
 
 resource "aws_db_instance" "db" {
-  identifier                = join("-", [var.common_prefix, "aws-rds-db01"])
+  identifier                = join("-", [var.common_prefix, "rds-db1"])
   allocated_storage         = var.db_allocated_storage
   engine                    = var.db_engine
   engine_version            = var.db_engine_version
@@ -46,5 +48,10 @@ resource "aws_db_instance" "db" {
   final_snapshot_identifier = false
   skip_final_snapshot       = true
   apply_immediately         = true
+
+  tags = {
+    Name      = join("-", [var.common_prefix, "rds-db1"])
+    ManagedBy = "terraform"
+  }
 }
 
