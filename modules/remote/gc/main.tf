@@ -1,11 +1,13 @@
 variable "key_name" {}
+variable "key_file_path" {}
 variable "public_ip" {}
-variable "rds_obj" {}
+variable "ec2_obj" {}
+#variable "rds_obj" {}
 
 locals {
   ## If genarated by terraform
   #private_key_file = "var/${var.key_name}.id_rsa"
-  private_key_file = "~/.ssh/${var.key_name}.id_rsa"
+  private_key_file = var.key_file_path
 }
 
 #resource "null_resource" "local-gc-config" {
@@ -18,11 +20,11 @@ locals {
 #resource "null_resource" "provision-web" {
 #  depends_on = [null_resource.local-gc-config]
 #  connection {
-#    host        = "${var.public_ip}"
+#    host        = var.public_ip
 #    type        = "ssh"
 #    port        = 22
 #    user        = "ec2-user"
-#    private_key = file("${local.private_key_file}")
+#    private_key = file(local.private_key_file)
 #    timeout     = "10m"
 #    agent       = false
 #  }
@@ -34,18 +36,18 @@ locals {
 #}
 
 resource "null_resource" "ec2-ssh-setup-gc" {
-  #depends_on = [null_resource.provision-web]
+  depends_on = [var.ec2_obj]
   provisioner "remote-exec" {
     scripts = [
       "bin/remote_setup_web.sh"
     ]
 
     connection {
-      host        = "${var.public_ip}"
+      host        = var.public_ip
       type        = "ssh"
       port        = 22
       user        = "ec2-user"
-      private_key = file("${local.private_key_file}")
+      private_key = file(local.private_key_file)
       timeout     = "10m"
       agent       = false
     }
