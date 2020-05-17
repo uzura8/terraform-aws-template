@@ -1,3 +1,4 @@
+variable "common_prefix" {}
 variable "availability_zones" {}
 
 #data "aws_availability_zones" "available" {

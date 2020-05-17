@@ -1,3 +1,4 @@
+variable "app_is_enabled" {}
 variable "key_name" {}
 variable "key_file_path" {}
 variable "public_ip" {}
@@ -36,6 +37,7 @@ locals {
 #}
 
 resource "null_resource" "ec2-ssh-setup-webapp" {
+  count      = var.app_is_enabled
   depends_on = [var.ec2_obj]
   provisioner "remote-exec" {
     scripts = [

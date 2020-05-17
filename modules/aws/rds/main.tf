@@ -1,3 +1,4 @@
+variable "db_is_enabled" {}
 variable "vpc_id" {}
 variable "subnet_group_db_name" {}
 variable "security_group_web_id" {}
@@ -33,6 +34,7 @@ resource "aws_security_group_rule" "db" {
 }
 
 resource "aws_db_instance" "db" {
+  count                     = var.db_is_enabled
   identifier                = join("-", [var.common_prefix, "rds-db1"])
   allocated_storage         = var.db_allocated_storage
   engine                    = var.db_engine

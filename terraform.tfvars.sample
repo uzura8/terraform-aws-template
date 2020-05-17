@@ -18,6 +18,7 @@ ec2_root_block_volume_size = "20"
 #ec2_ebs_block_volume_size  = "50"
 
 # RDS
+aws_db_is_enabled        = 1
 aws_db_instance_type     = "db.t2.micro"
 aws_db_block_volume_type = "gp2" # gp2 / io1 / standard
 aws_db_allocated_storage = "20"  # GB
@@ -27,4 +28,7 @@ aws_db_port              = "3306"
 aws_db_name              = "" # Set this, if create db
 aws_db_username          = "set-db_admin"
 aws_db_password          = "set-db_password"
+
+# APP Deploy
+aws_app_is_enabled = 0
 
