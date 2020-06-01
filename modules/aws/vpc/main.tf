@@ -6,6 +6,7 @@ variable "availability_zones" {}
 #}
 
 
+# VPC
 resource "aws_vpc" "this" {
   cidr_block           = "10.0.0.0/16"
   instance_tenancy     = "default"
@@ -18,6 +19,59 @@ resource "aws_vpc" "this" {
   }
 }
 
+# subnet for ELB1
+resource "aws_subnet" "public_a" {
+  vpc_id                  = aws_vpc.this.id
+  cidr_block              = "10.0.1.0/24"
+  availability_zone       = var.availability_zones[0]
+  map_public_ip_on_launch = true # accept to add public ip for instance
+
+  tags = {
+    Name      = join("-", [var.common_prefix, "subnet", "public_a"])
+    ManagedBy = "terraform"
+  }
+}
+
+# subnet for ELB2
+resource "aws_subnet" "public_b" {
+  vpc_id                  = aws_vpc.this.id
+  cidr_block              = "10.0.2.0/24"
+  availability_zone       = var.availability_zones[1]
+  map_public_ip_on_launch = true # accept to add public ip for instance
+
+  tags = {
+    Name      = join("-", [var.common_prefix, "subnet", "public_b"])
+    ManagedBy = "terraform"
+  }
+}
+
+# subnet for WEB1
+resource "aws_subnet" "public_a_web" {
+  vpc_id                  = aws_vpc.this.id
+  cidr_block              = "10.0.3.0/24"
+  availability_zone       = var.availability_zones[0]
+  map_public_ip_on_launch = true # accept to add public ip for instance
+
+  tags = {
+    Name      = join("-", [var.common_prefix, "subnet", "public_a_web"])
+    ManagedBy = "terraform"
+  }
+}
+
+# subnet for WEB2
+resource "aws_subnet" "public_b_web" {
+  vpc_id                  = aws_vpc.this.id
+  cidr_block              = "10.0.4.0/24"
+  availability_zone       = var.availability_zones[1]
+  map_public_ip_on_launch = true # accept to add public ip for instance
+
+  tags = {
+    Name      = join("-", [var.common_prefix, "subnet", "public_b_web"])
+    ManagedBy = "terraform"
+  }
+}
+
+# Internet Gateway
 resource "aws_internet_gateway" "this" {
   vpc_id = aws_vpc.this.id
 
@@ -27,7 +81,8 @@ resource "aws_internet_gateway" "this" {
   }
 }
 
-resource "aws_route_table" "public_rt" {
+# Route Table for public
+resource "aws_route_table" "public" {
   vpc_id = aws_vpc.this.id
   route {
     cidr_block = "0.0.0.0/0"
@@ -40,55 +95,56 @@ resource "aws_route_table" "public_rt" {
   }
 }
 
-resource "aws_subnet" "public_web" {
+# Associate subnet and route table
+resource "aws_route_table_association" "public_a" {
+  subnet_id      = aws_subnet.public_a.id
+  route_table_id = aws_route_table.public.id
+}
+resource "aws_route_table_association" "public_b" {
+  subnet_id      = aws_subnet.public_b.id
+  route_table_id = aws_route_table.public.id
+}
+resource "aws_route_table_association" "public_a_web" {
+  subnet_id      = aws_subnet.public_a_web.id
+  route_table_id = aws_route_table.public.id
+}
+resource "aws_route_table_association" "public_b_web" {
+  subnet_id      = aws_subnet.public_b_web.id
+  route_table_id = aws_route_table.public.id
+}
+
+
+# network fro rds #
+# subnet for RDS1
+resource "aws_subnet" "private_a" {
   vpc_id                  = aws_vpc.this.id
-  cidr_block              = "10.0.0.0/24"
+  cidr_block              = "10.0.5.0/24"
+  map_public_ip_on_launch = false # accept to add public ip for instance
   availability_zone       = var.availability_zones[0]
-  map_public_ip_on_launch = true
-  #availability_zone = data.aws_availability_zones.available.names[0]
 
   tags = {
-    Name      = join("-", [var.common_prefix, "subnet", "web"])
+    Name      = join("-", [var.common_prefix, "subnet", "private_a"])
+    ManagedBy = "terraform"
+  }
+}
+# subnet for RDS2
+resource "aws_subnet" "private_b" {
+  vpc_id                  = aws_vpc.this.id
+  cidr_block              = "10.0.6.0/24"
+  map_public_ip_on_launch = false # accept to add public ip for instance
+  availability_zone       = var.availability_zones[1]
+
+  tags = {
+    Name      = join("-", [var.common_prefix, "subnet", "private_b"])
     ManagedBy = "terraform"
   }
 }
 
-resource "aws_route_table_association" "public_web" {
-  subnet_id      = aws_subnet.public_web.id
-  route_table_id = aws_route_table.public_rt.id
-}
-
-# network db
-resource "aws_subnet" "private_db1" {
-  vpc_id            = aws_vpc.this.id
-  cidr_block        = "10.0.1.0/24"
-  availability_zone = var.availability_zones[0]
-  #availability_zone = data.aws_availability_zones.available.names[0]
+resource "aws_db_subnet_group" "private" {
+  subnet_ids = [aws_subnet.private_a.id, aws_subnet.private_b.id]
 
   tags = {
-    Name      = join("-", [var.common_prefix, "subnet", "db-1"])
-    ManagedBy = "terraform"
-  }
-}
-
-resource "aws_subnet" "private_db2" {
-  vpc_id            = aws_vpc.this.id
-  cidr_block        = "10.0.2.0/24"
-  availability_zone = var.availability_zones[1]
-  #availability_zone = data.aws_availability_zones.available.names[1]
-
-  tags = {
-    Name      = join("-", [var.common_prefix, "subnet", "db-2"])
-    ManagedBy = "terraform"
-  }
-}
-
-resource "aws_db_subnet_group" "main" {
-  description = "It is a DB subnet group on tf_vpc."
-  subnet_ids  = [aws_subnet.private_db1.id, aws_subnet.private_db2.id]
-
-  tags = {
-    Name      = join("-", [var.common_prefix, "subnet", "db"])
+    Name      = join("-", [var.common_prefix, "subnets", "db"])
     ManagedBy = "terraform"
   }
 }

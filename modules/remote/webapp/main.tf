@@ -1,8 +1,8 @@
 variable "app_is_enabled" {}
 variable "key_name" {}
 variable "key_file_path" {}
-variable "public_ip" {}
-variable "ec2_obj" {}
+variable "ec2_obj_web1" {}
+variable "ec2_obj_web2" {}
 #variable "rds_obj" {}
 
 locals {
@@ -38,14 +38,14 @@ locals {
 
 resource "null_resource" "ec2-ssh-setup-webapp" {
   count      = var.app_is_enabled
-  depends_on = [var.ec2_obj]
+  depends_on = [var.ec2_obj_web1]
   provisioner "remote-exec" {
     scripts = [
       "bin/remote_setup_webapp.sh"
     ]
 
     connection {
-      host        = var.public_ip
+      host        = var.ec2_obj_web1.public_ip
       type        = "ssh"
       port        = 22
       user        = "ec2-user"
@@ -55,4 +55,24 @@ resource "null_resource" "ec2-ssh-setup-webapp" {
     }
   }
 }
+
+#resource "null_resource" "ec2-ssh-setup-webapp" {
+#  count      = var.app_is_enabled
+#  depends_on = [var.ec2_obj_web2]
+#  provisioner "remote-exec" {
+#    scripts = [
+#      "bin/remote_setup_webapp.sh"
+#    ]
+#
+#    connection {
+#      host        = var.ec2_obj_web2.public_ip
+#      type        = "ssh"
+#      port        = 22
+#      user        = "ec2-user"
+#      private_key = file(local.private_key_file)
+#      timeout     = "10m"
+#      agent       = false
+#    }
+#  }
+#}
 

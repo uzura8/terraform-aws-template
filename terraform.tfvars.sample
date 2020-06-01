@@ -8,17 +8,22 @@ common_prefix = "hoge-prod"
 vpc_availability_zones = ["ap-northeast-1c", "ap-northeast-1d"]
 
 # EC2
+aws_ec2_is_enabled         = 1
 key_name                   = "your-ssh-keypair-name"
 key_file_path              = "~/.ssh/your-ssh-key-file-name"
-security_ssh_ingress_cidrs = ["0.0.0.0/0"]          # Set by Array type
+security_ssh_ingress_cidrs = ["0.0.0.0/0"] # Set by Array type
 ec2_instance_type          = "t2.micro"
 ec2_root_block_volume_type = "gp2" # gp2 / io1 / standard
 ec2_root_block_volume_size = "20"
 #ec2_ebs_block_volume_type  = "gp2" # gp2 / io1 / standard
 #ec2_ebs_block_volume_size  = "50"
 
+# ELB
+elb_health_check_path = "/api/health_check/"
+
 # RDS
 aws_db_is_enabled        = 1
+aws_db_is_enabled_multi_az = 1
 aws_db_instance_type     = "db.t2.micro"
 aws_db_block_volume_type = "gp2" # gp2 / io1 / standard
 aws_db_allocated_storage = "20"  # GB
@@ -29,6 +34,6 @@ aws_db_name              = "" # Set this, if create db
 aws_db_username          = "set-db_admin"
 aws_db_password          = "set-db_password"
 
-# APP Deploy
+# APP
 aws_app_is_enabled = 0
 
