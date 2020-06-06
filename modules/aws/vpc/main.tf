@@ -148,3 +148,47 @@ resource "aws_db_subnet_group" "private" {
     ManagedBy = "terraform"
   }
 }
+
+# NAT Gateway
+resource "aws_eip" "ng" {
+  vpc        = true
+  depends_on = [aws_internet_gateway.this]
+
+  tags = {
+    Name      = join("-", [var.common_prefix, "eip", "ng"])
+    ManagedBy = "terraform"
+  }
+}
+
+resource "aws_nat_gateway" "ng" {
+  allocation_id = aws_eip.ng.id
+  subnet_id     = aws_subnet.public_a.id
+  depends_on    = [aws_internet_gateway.this]
+
+  tags = {
+    Name      = join("-", [var.common_prefix, "ng"])
+    ManagedBy = "terraform"
+  }
+}
+
+# Route Table for Private
+resource "aws_route_table" "private" {
+  vpc_id = aws_vpc.this.id
+
+  tags = {
+    Name      = join("-", [var.common_prefix, "rtb", "private"])
+    ManagedBy = "terraform"
+  }
+}
+
+resource "aws_route" "private" {
+  destination_cidr_block = "0.0.0.0/0"
+  route_table_id         = aws_route_table.private.id
+  nat_gateway_id         = aws_nat_gateway.ng.id
+}
+
+resource "aws_route_table_association" "private_a" {
+  subnet_id      = aws_subnet.private_a.id
+  route_table_id = aws_route_table.private.id
+}
+
