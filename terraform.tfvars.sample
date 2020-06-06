@@ -30,5 +30,5 @@ aws_db_username          = "set-db_admin"
 aws_db_password          = "set-db_password"
 
 # APP Deploy
-aws_app_is_enabled = 0
+app_is_enabled = 0
 
