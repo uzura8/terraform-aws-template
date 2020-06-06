@@ -1,7 +1,3 @@
-output "security_group_web_id" {
-  value = "${aws_security_group.this.id}"
-}
-
 output "ec2_obj_web1" {
   value = "${aws_instance.web_a}"
 }

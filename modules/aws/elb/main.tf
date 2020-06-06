@@ -3,8 +3,8 @@ variable "vpc_id" {}
 variable "subnet_public_a_web_id" {}
 variable "subnet_public_b_web_id" {}
 variable "health_check_path" {}
-variable "ec2_web1_id" {}
-variable "ec2_web2_id" {}
+#variable "ec2_web1_id" {}
+#variable "ec2_web2_id" {}
 
 # Security gourp for ALB
 resource "aws_security_group" "alb_web" {
@@ -67,17 +67,17 @@ resource "aws_lb_target_group" "web" {
   }
 }
 
-resource "aws_lb_target_group_attachment" "web_a" {
-  target_group_arn = aws_lb_target_group.web.arn
-  target_id        = var.ec2_web1_id
-  port             = 80
-}
+#resource "aws_lb_target_group_attachment" "web_a" {
+#  target_group_arn = aws_lb_target_group.web.arn
+#  target_id        = var.ec2_web1_id
+#  port             = 80
+#}
 
-resource "aws_lb_target_group_attachment" "web_b" {
-  target_group_arn = aws_lb_target_group.web.arn
-  target_id        = var.ec2_web2_id
-  port             = 80
-}
+#resource "aws_lb_target_group_attachment" "web_b" {
+#  target_group_arn = aws_lb_target_group.web.arn
+#  target_id        = var.ec2_web2_id
+#  port             = 80
+#}
 
 # Listener of ALB
 resource "aws_lb_listener" "web" {

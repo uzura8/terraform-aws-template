@@ -40,12 +40,10 @@ module "module_elb" {
   vpc_id                 = module.module_vpc.vpc_id
   subnet_public_a_web_id = module.module_vpc.subnet_public_a_web_id
   subnet_public_b_web_id = module.module_vpc.subnet_public_b_web_id
-  ec2_web1_id            = module.module_ec2.ec2_web1_id
-  ec2_web2_id            = module.module_ec2.ec2_web2_id
   common_prefix          = var.common_prefix
   health_check_path      = var.elb_health_check_path
-  #ec2_obj_web1           = module.module_ec2.ec2_obj_web1
-  #ec2_obj_web2           = module.module_ec2.ec2_obj_web2
+  #ec2_web1_id            = module.module_ec2.ec2_web1_id
+  #ec2_web2_id            = module.module_ec2.ec2_web2_id
 }
 
 # RDS
@@ -53,7 +51,6 @@ module "module_rds" {
   source                 = "./modules/aws/rds"
   vpc_id                 = module.module_vpc.vpc_id
   vpc_cidr_block         = module.module_vpc.vpc_cidr_block
-  security_group_web_id  = module.module_ec2.security_group_web_id
   subnet_group_db_name   = module.module_vpc.subnet_group_db_name
   db_is_enabled          = var.aws_db_is_enabled
   db_is_enabled_multi_az = var.aws_db_is_enabled_multi_az

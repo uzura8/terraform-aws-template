@@ -3,7 +3,6 @@ variable "db_is_enabled_multi_az" {}
 variable "vpc_id" {}
 variable "vpc_cidr_block" {}
 variable "subnet_group_db_name" {}
-variable "security_group_web_id" {}
 variable "db_instance_type" {}
 variable "db_block_volume_type" {}
 variable "db_allocated_storage" {}
