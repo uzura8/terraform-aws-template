@@ -1,9 +1,13 @@
 #!/bin/bash
 
+ADMIN_USER=ec2-user
 NODE_VER=12.16.0
-SERVICE_DOMAIN=example.com
 
-#### locale setting  ###
+SERVICE_DOMAIN=example.com
+GIT_USER_NAME="user-name"
+GIT_USER_EMAIL="user-name@example.com"
+
+### locale setting  ###
 sudo timedatectl set-timezone Asia/Tokyo
 sudo localectl set-locale LANG=ja_JP.UTF-8
 
@@ -11,7 +15,7 @@ sudo localectl set-locale LANG=ja_JP.UTF-8
 sudo amazon-linux-extras enable epel
 sudo yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
 
-#### Setting yum update ###
+### Setting yum update ###
 sudo yum -y update
 sudo yum -y install yum-cron
 sudo cp /etc/yum/yum-cron.conf /etc/yum/yum-cron.conf.ori
@@ -21,12 +25,111 @@ sudo systemctl start yum-cron
 sudo systemctl enable yum-cron
 sudo yum -y groupinstall base "Development tools"
 
+### install etckeeper ###
+sudo yum --enablerepo=epel -y install etckeeper
+sudo touch /etc/.gitignore
+sudo echo "shadow*" >> /etc/.gitignore
+sudo echo "gshadow*" >> /etc/.gitignore
+sudo echo "passwd*" >> /etc/.gitignore
+sudo echo "group*" >> /etc/.gitignore
+sudo git config --global user.email "${GIT_USER_EMAIL}"
+sudo git config --global user.name "${GIT_USER_NAME}"
+sudo etckeeper init
+sudo etckeeper commit "First Commit"
+
+##### install postfix
+#sudo yum -y install postfix
+#sudo cp /etc/postfix/main.cf /etc/postfix/main.cf.ori
+#sudo cat >> /etc/postfix/main.cf <<EOF
+#
+##smtp_tls_security_level = may # For postfix v2.3
+#smtpd_tls_received_header = yes
+#smtp_use_tls = yes
+#
+#EOF
+#sudo systemctl start postfix
+#sudo systemctl enable postfix
+
+### install others ###
 sudo yum install -y nkf --enablerepo=epel
 sudo setenforce 0
+sudo systemctl stop firewalld.service
+sudo systemctl mask firewalld.service
 sudo yum -y install rsyslog
 sudo systemctl start rsyslog
 sudo systemctl enable rsyslog
 sudo yum -y install sysstat
+sudo yum -y install screen
+
+### user setting ###
+#### bash setting
+cat >> /home/${ADMIN_USER}/.bash_profile <<EOF
+export PS1="[\u@\h \W]\\$ "
+export EDITOR=vim
+alias V='vim -R -'
+EOF
+source /home/${ADMIN_USER}/.bash_profile
+
+#### screen setting
+cat > /home/${ADMIN_USER}/.screenrc <<EOF
+escape ^Jj
+hardstatus alwayslastline "[%02c] %-w%{=b bw}%n %t%{-}%+w"
+startup_message off
+vbell off
+autodetach on
+defscrollback 10000
+termcapinfo xterm* ti@:te@
+EOF
+chown ${ADMIN_USER}. /home/${ADMIN_USER}/.screenrc
+
+#### vim setting
+cat > /home/${ADMIN_USER}/.vimrc <<EOF
+syntax on
+"set number
+set enc=utf-8
+set fenc=utf-8
+set fencs=iso-2022-jp,euc-jp,cp932
+set backspace=2
+set noswapfile
+"set shiftwidth=4
+"set tabstop=4
+set shiftwidth=2
+set tabstop=2
+"set expandtab
+set hlsearch
+set backspace=indent,eol,start
+"" for us-keybord
+"nnoremap ; :
+"nnoremap : ;
+"" Remove comment out as you like
+"hi Comment ctermfg=DarkGray
+EOF
+#chown ${ADMIN_USER}. /home/${ADMIN_USER}/.vimrc
+sudo ln -s /home/${ADMIN_USER}/.vimrc /root/
+
+#### git setting
+cat > /home/${ADMIN_USER}/.gitconfig <<EOF
+[color]
+  diff = auto
+  status = auto
+  branch = auto
+  interactive = auto
+[alias]
+  co = checkout
+  st = status
+  ci = commit -v
+  di = diff
+  di-file = diff --name-only
+  up = pull --rebase
+  br = branch
+  ll  = log --graph --pretty=full --stat
+  l  = log --oneline
+EOF
+echo "[user]" >> /home/${ADMIN_USER}/.gitconfig
+echo "  email = ${GIT_USER_EMAIL}" >> /home/${ADMIN_USER}/.gitconfig
+echo "  name = ${GIT_USER_NAME}" >> /home/${ADMIN_USER}/.gitconfig
+chown ${ADMIN_USER}. /home/${ADMIN_USER}/.gitconfig
+sudo ln -s /home/${ADMIN_USER}/.gitconfig /root/
 
 ### Install MySQL ###
 sudo yum install -y https://dev.mysql.com/get/mysql80-community-release-el7-3.noarch.rpm
@@ -37,11 +140,21 @@ sudo yum install -y mysql-community-client
 ### Install Apache ###
 sudo yum install -y httpd httpd-devel zlib-devel
 
+#### Add webadmin group
+#sudo echo "umask 002" > /etc/sysconfig/httpd
+sudo groupadd webadmin
+sudo gpasswd -a ${ADMIN_USER} webadmin
+sudo gpasswd -a apache webadmin
+
 #### Create Web directries
 sudo rm -f /etc/httpd/conf.d/welcome.conf
 sudo rm -f /var/www/error/noindex.html
 sudo rm -f /var/www/error/noindex.html
 sudo mkdir -p /var/www/sites
+sudo chown ${ADMIN_USER} /var/www/sites /var/www/html
+sudo chgrp -R webadmin /var/www/sites /var/www/html
+sudo chmod -R 775 /var/www/sites /var/www/html
+sudo chmod -R g+s /var/www/sites /var/www/html
 
 #### Apache setting
 sudo cp /etc/httpd/conf/httpd.conf /etc/httpd/conf/httpd.conf.ori
@@ -129,4 +242,27 @@ LoadModule wsgi_module ${MOD_WSGI_PATH}
 </VirtualHost>
 EOF
 
+
+### Install php
+#sudo amazon-linux-extras enable php7.4
+#sudo amazon-linux-extras install -y php7.4
+#sudo yum install -y ImageMagick ImageMagick-devel
+#sudo yum install -y php php-mysqlnd php-devel php-gd php-opcache php-mbstring php-pdo
+##sudo yum install -y php-pear php-pecl-imagick
+#sudo cat > /etc/php.d/my.ini <<EOF
+#short_open_tag = Off
+#expose_php = Off
+#memory_limit = 128M
+#post_max_size = 20M
+#upload_max_filesize = 20M
+#max_execution_time = 300
+#date.timezone = Asia/Tokyo
+#error_reporting = E_ALL & ~E_NOTICE
+#;error_log = "/var/log/php/php_errors.log" 
+#[mbstring]
+#mbstring.language = Japanese
+#mbstring.internal_encoding = utf-8
+#EOF
+
+## restart httpd ##
 sudo systemctl restart httpd
