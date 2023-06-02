@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ADMIN_USER=ec2-user
-NODE_VER=12.16.0
+NODE_VER=18.16.0
 
 SERVICE_DOMAIN=example.com
 GIT_USER_NAME="user-name"
