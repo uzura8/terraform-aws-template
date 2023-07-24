@@ -15,8 +15,9 @@ Thumbs.db
 desktop.ini
 
 /.terraform
+/.terraform.lock.hcl
 /.terraform.tfstate.lock.info
-/terraform.tfstate*
 /terraform.tfvars
+/terraform.tfstate*
 /var/*
 /bin/setup.conf
