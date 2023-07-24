@@ -3,6 +3,17 @@ provider "aws" {
   region  = var.aws_region
 }
 
+terraform {
+  backend "s3" {
+  }
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 3.74.2"
+    }
+  }
+}
+
 ## Local
 #module "module_keygen" {
 #  source   = "./modules/local/keygen"

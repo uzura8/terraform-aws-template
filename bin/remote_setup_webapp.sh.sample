@@ -1,9 +1,9 @@
 #!/bin/bash
 
 ADMIN_USER=ec2-user
-NODE_VER=18.16.0
+NODE_VER=18.16.1
 
-SERVICE_DOMAIN=example.com
+#SERVICE_DOMAIN=example.com
 GIT_USER_NAME="user-name"
 GIT_USER_EMAIL="user-name@example.com"
 
@@ -11,9 +11,9 @@ GIT_USER_EMAIL="user-name@example.com"
 sudo timedatectl set-timezone Asia/Tokyo
 sudo localectl set-locale LANG=ja_JP.UTF-8
 
-### Add yum optional repository ###
-sudo amazon-linux-extras enable epel
-sudo yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+#### Add yum optional repository ###
+#sudo amazon-linux-extras enable epel
+#sudo yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
 
 ### Setting yum update ###
 sudo yum -y update
@@ -131,11 +131,11 @@ echo "  name = ${GIT_USER_NAME}" >> /home/${ADMIN_USER}/.gitconfig
 chown ${ADMIN_USER}. /home/${ADMIN_USER}/.gitconfig
 sudo ln -s /home/${ADMIN_USER}/.gitconfig /root/
 
-### Install MySQL ###
-sudo yum install -y https://dev.mysql.com/get/mysql80-community-release-el7-3.noarch.rpm
-sudo yum-config-manager --disable mysql80-community
-sudo yum-config-manager --enable mysql57-community
-sudo yum install -y mysql-community-client
+#### Install MySQL ###
+#sudo yum install -y https://dev.mysql.com/get/mysql80-community-release-el7-3.noarch.rpm
+#sudo yum-config-manager --disable mysql80-community
+#sudo yum-config-manager --enable mysql57-community
+#sudo yum install -y mysql-community-client
 
 ### Install Apache ###
 sudo yum install -y httpd httpd-devel zlib-devel
@@ -224,23 +224,23 @@ nvm install ${NODE_VER}
 nvm use ${NODE_VER}
 nvm alias default ${NODE_VER}
 
-# Install python
-sudo yum install -y python3-devel python3-libs python3-setuptools python3-pip
-sudo yum install -y httpd-devel
-sudo pip3 install mod_wsgi
-MOD_WSGI_PATH=`find /usr/local/ -type f -name "mod_wsgi*.so"`
-sudo cat >> /etc/httpd/conf.d/virtualhost.conf <<EOF
-LoadModule wsgi_module ${MOD_WSGI_PATH}
-<VirtualHost *:80>
-  ServerName ${SERVICE_DOMAIN}
-  DocumentRoot /var/www/sites/${SERVICE_DOMAIN}
-  WSGIScriptAlias / /var/www/sites/${SERVICE_DOMAIN}/adapter.wsgi
-  <Directory "/var/www/sites/${SERVICE_DOMAIN}/">
-    Order deny,allow
-    Allow from all
-  </Directory>
-</VirtualHost>
-EOF
+## Install python
+#sudo yum install -y python3-devel python3-libs python3-setuptools python3-pip
+#sudo yum install -y httpd-devel
+#sudo pip3 install mod_wsgi
+#MOD_WSGI_PATH=`find /usr/local/ -type f -name "mod_wsgi*.so"`
+#sudo cat >> /etc/httpd/conf.d/virtualhost.conf <<EOF
+#LoadModule wsgi_module ${MOD_WSGI_PATH}
+#<VirtualHost *:80>
+#  ServerName ${SERVICE_DOMAIN}
+#  DocumentRoot /var/www/sites/${SERVICE_DOMAIN}
+#  WSGIScriptAlias / /var/www/sites/${SERVICE_DOMAIN}/adapter.wsgi
+#  <Directory "/var/www/sites/${SERVICE_DOMAIN}/">
+#    Order deny,allow
+#    Allow from all
+#  </Directory>
+#</VirtualHost>
+#EOF
 
 
 ### Install php

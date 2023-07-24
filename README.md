@@ -9,53 +9,10 @@ You have to install AWS-CLI, terraform, jq, npm on enviroment of terraform execu
 ```bash
 brew install jq
 brew install tfenv
-tfenv install 0.12.24
+tfenv install 1.4.6
 ```
 
 Refer to [AWS docs](https://docs.aws.amazon.com/cli/latest/userguide/install-macos.html) to install AWS-CLI
-
-#### Setup enviroment on Ubuntu by Docker
-
-##### Dockerfile
-
-```
-FROM ubuntu:18.04
-RUN apt-get -y update
-RUN apt-get -y install software-properties-common
-RUN yes | add-apt-repository ppa:jonathonf/vim
-RUN apt-get -y update
-RUN apt-get -y install zsh
-RUN chsh -s /usr/bin/zsh
-RUN /usr/bin/zsh
-RUN apt-get -y install git docker python vim neovim
-RUN apt-get install -y python-pip
-RUN pip install --upgrade pip
-RUN yes|pip install awscli
-RUN apt-get -y update
-RUN apt-get install wget
-RUN apt-get -y install zip unzip
-RUN apt-get -y install jq
-RUN wget https://releases.hashicorp.com/terraform/0.12.24/terraform_0.12.24_linux_amd64.zip
-RUN unzip terraform_0.12.24_linux_amd64.zip
-RUN cp terraform /usr/local/bin
-RUN apt-get -y install nodejs npm
-RUN npm install n -g
-RUN n stable
-
-WORKDIR /root
-```
-
-##### run.sh
-
-```bash
-docker build -t ubuntu_tf_webapp .
-docker stop ubuntu_tf_webapp_con
-docker rm ubuntu_tf_webapp_con
-docker run -v /user-home-dir-path/.aws:/root/.aws -it --name ubuntu_tf_webapp_con ubuntu_tf_webapp:latest /bin/bash
-```
-
-Execute run.sh  
-Move to your work dir, and chekout this project.
 
 ## Setup AWS Resources by Terraform
 
@@ -102,17 +59,23 @@ aws_db_username          = "set-db_admin"
 aws_db_password          = "set-db_password"
 ```
 
+Set execute file on remote server
+
+```bash
+cp bin/remote_setup_web.sh.sample bin/remote_setup_web.sh
+```
+
 ```bash
 # bin/remote_setup_web.sh
 
-NODE_VER=12.15.0
-SERVISE_DOMAIN=example.com
+NODE_VER=18.16.1
 ```
 
 ### Deploy
 
 ```bash
-bash ./bin/deploy.sh
+terraform init -backend-config="bucket=your-deployment" -backend-config="key=terraform/your-project/terraform.tfstate" -backend-config="region=ap-northeast-1" -backend-config="profile=your-aws-profile-name"
+terraform apply -auto-approve -var-file=./terraform.tfvars
 ```
 
 ### Check on browser
@@ -129,16 +92,18 @@ And you request http://ec2-xxx-xxx-xxx-xxx.ap-northeast-1.compute.amazonaws.com 
 
 #### Other informations after deploy
 
+First, you have to get terraform.json from S3 Bucket
+
 Get RDS address
 
 ```bash
-jq -r '.resources[]|select(.type == "aws_db_instance").instances[0].attributes.address' terraform.tfstate
+jq -r '.resources[]|select(.type == "aws_db_instance").instances[0].attributes.address' terraform.json
 ```
 
 Get Elastick IP address
 
 ```bash
-jq -r '.resources[]|select(.type == "aws_eip")|.instances[0] | .attributes | .public_ip' terraform.tfstate
+jq -r '.resources[]|select(.type == "aws_eip")|.instances[0] | .attributes | .public_ip' terraform.json
 ```
 
 ## Destroy AWS Resources

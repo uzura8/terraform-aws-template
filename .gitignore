@@ -19,5 +19,7 @@ desktop.ini
 /.terraform.tfstate.lock.info
 /terraform.tfvars
 /terraform.tfstate*
+/terraform.json*
 /var/*
 /bin/setup.conf
+/bin/remote_setup_webapp.sh
