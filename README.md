@@ -1,17 +1,21 @@
 # terraform-aws-template
 
 ### Build enviroment of Terraform exicution
+
 You have to install AWS-CLI, terraform, jq, npm on enviroment of terraform execution
 
 #### Setup enviroment on mac
+
 ```bash
 brew install jq
 brew install tfenv
 tfenv install 0.12.24
 ```
+
 Refer to [AWS docs](https://docs.aws.amazon.com/cli/latest/userguide/install-macos.html) to install AWS-CLI
 
 #### Setup enviroment on Ubuntu by Docker
+
 ##### Dockerfile
 
 ```
@@ -42,17 +46,19 @@ WORKDIR /root
 ```
 
 ##### run.sh
+
 ```bash
 docker build -t ubuntu_tf_webapp .
 docker stop ubuntu_tf_webapp_con
 docker rm ubuntu_tf_webapp_con
 docker run -v /user-home-dir-path/.aws:/root/.aws -it --name ubuntu_tf_webapp_con ubuntu_tf_webapp:latest /bin/bash
 ```
+
 Execute run.sh  
 Move to your work dir, and chekout this project.
 
-
 ## Setup AWS Resources by Terraform
+
 ### Setup config
 
 ```bash
@@ -110,6 +116,7 @@ bash ./bin/deploy.sh
 ```
 
 ### Check on browser
+
 Get ec2 dns
 
 ```bash
@@ -117,9 +124,11 @@ jq -r '.resources[]|select(.type == "aws_eip").instances[0].attributes.public_dn
 
 # You get like ec2-xxx-xxx-xxx-xxx.ap-northeast-1.compute.amazonaws.com
 ```
+
 And you request http://ec2-xxx-xxx-xxx-xxx.ap-northeast-1.compute.amazonaws.com on browser.
 
 #### Other informations after deploy
+
 Get RDS address
 
 ```bash
@@ -132,10 +141,8 @@ Get Elastick IP address
 jq -r '.resources[]|select(.type == "aws_eip")|.instances[0] | .attributes | .public_ip' terraform.tfstate
 ```
 
-
 ## Destroy AWS Resources
 
 ```bash
 bash ./bin/destroy.sh
 ```
-
