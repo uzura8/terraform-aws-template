@@ -2,6 +2,7 @@
 
 ADMIN_USER=ec2-user
 NODE_VER=18.16.1
+PYTHON_VER=3.10.12
 
 #SERVICE_DOMAIN=example.com
 GIT_USER_NAME="user-name"
@@ -225,6 +226,16 @@ nvm use ${NODE_VER}
 nvm alias default ${NODE_VER}
 
 ## Install python
+sudo yum install -y gcc gcc-c++ make git openssl-devel bzip2-devel readline-devel zlib-devel sqlite-devel
+curl https://pyenv.run | bash
+cat >> /home/${ADMIN_USER}/.bash_profile <<'EOF'
+# pyenv
+export PATH="$HOME/.pyenv/bin:$PATH"
+eval "$(pyenv init -)"
+EOF
+source /home/${ADMIN_USER}/.bash_profile
+pyenv install ${PYTHON_VER}
+pyenv global ${PYTHON_VER}
 #sudo yum install -y python3-devel python3-libs python3-setuptools python3-pip
 #sudo yum install -y httpd-devel
 #sudo pip3 install mod_wsgi
