@@ -4,6 +4,8 @@ variable "subnet_public_web_id" {}
 variable "key_name" {}
 variable "security_ssh_ingress_cidrs" {}
 variable "ec2_instance_type" {}
+variable "ec2_ami_type" {}
+variable "ec2_eip_is_enabled" {}
 variable "ec2_root_block_volume_type" {}
 variable "ec2_root_block_volume_size" {}
 #variable "ec2_ebs_block_volume_type" {}
@@ -62,7 +64,7 @@ resource "aws_security_group_rule" "all" {
   security_group_id = aws_security_group.this.id
 }
 
-data "aws_ami" "amazon_linux2" {
+data "aws_ami" "amazon_linux_2" {
   most_recent = true
   owners      = ["amazon"]
 
@@ -87,9 +89,36 @@ data "aws_ami" "amazon_linux2" {
   }
 }
 
+data "aws_ami" "amazon_linux_2023" {
+  most_recent = true
+  owners      = ["amazon"]
+  filter {
+    name = "name"
+
+    values = ["al2023-ami-*-kernel-6.1-x86_64"] # x86_64
+    # values = [ "al2023-ami-*-kernel-6.1-arm64" ] # ARM
+    # values = [ "al2023-ami-minimal-*-kernel-6.1-x86_64" ] # Minimal Image (x86_64)
+    # values = [ "al2023-ami-minimal-*-kernel-6.1-arm64" ] # Minimal Image (ARM)
+  }
+
+  filter {
+    name   = "root-device-type"
+    values = ["ebs"]
+  }
+
+  filter {
+    name = "owner-alias"
+    values = [
+      "amazon",
+    ]
+  }
+}
+
+
+
 # EC2
 resource "aws_instance" "web1" {
-  ami                         = data.aws_ami.amazon_linux2.id
+  ami                         = var.ec2_ami_type == "amazon_linux_2" ? data.aws_ami.amazon_linux_2.id : data.aws_ami.amazon_linux_2023.id
   instance_type               = var.ec2_instance_type
   key_name                    = var.key_name
   vpc_security_group_ids      = [aws_security_group.this.id]
@@ -118,6 +147,7 @@ resource "aws_instance" "web1" {
 
 # EIP
 resource "aws_eip" "this" {
+  count    = var.ec2_eip_is_enabled
   instance = aws_instance.web1.id
   vpc      = true
   tags = {

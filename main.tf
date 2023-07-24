@@ -36,6 +36,8 @@ module "module_ec2" {
   security_ssh_ingress_cidrs = var.security_ssh_ingress_cidrs
   common_prefix              = var.common_prefix
   ec2_instance_type          = var.ec2_instance_type
+  ec2_ami_type               = var.ec2_ami_type
+  ec2_eip_is_enabled         = var.ec2_eip_is_enabled
   ec2_root_block_volume_type = var.ec2_root_block_volume_type
   ec2_root_block_volume_size = var.ec2_root_block_volume_size
   #ec2_ebs_block_volume_type  = var.ec2_ebs_block_volume_type
@@ -88,11 +90,13 @@ variable "aws_db_username" {}
 variable "aws_db_password" {}
 variable "aws_db_name" {}
 variable "vpc_availability_zones" {}
-variable "app_is_enabled" {}
 variable "key_name" {}
 variable "key_file_path" {}
 variable "security_ssh_ingress_cidrs" {}
+variable "app_is_enabled" {}
 variable "ec2_instance_type" {}
+variable "ec2_ami_type" {}
+variable "ec2_eip_is_enabled" {}
 variable "ec2_root_block_volume_type" {}
 variable "ec2_root_block_volume_size" {}
 #variable "ec2_ebs_block_volume_type" {}
