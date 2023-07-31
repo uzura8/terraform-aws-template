@@ -214,13 +214,13 @@ mkdir ~/src
 cd ~/src
 git clone https://github.com/creationix/nvm.git ~/.nvm
 source ~/.nvm/nvm.sh
-cat > ~/.bash_profile <<EOF
+cat >> /home/${ADMIN_USER}/.bash_profile <<EOF
 # nvm
 if [[ -s ~/.nvm/nvm.sh ]] ; then
   source ~/.nvm/nvm.sh ;
 fi
 EOF
-
+source /home/${ADMIN_USER}/.bash_profile
 nvm install ${NODE_VER}
 nvm use ${NODE_VER}
 nvm alias default ${NODE_VER}
