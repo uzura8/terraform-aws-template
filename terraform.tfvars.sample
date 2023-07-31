@@ -5,7 +5,9 @@ aws_region  = "ap-northeast-1"
 common_prefix = "hoge-prod"
 
 # VPC
-vpc_availability_zones = ["ap-northeast-1c", "ap-northeast-1d"]
+#vpc_availability_zones = ["ap-northeast-1c", "ap-northeast-1d"]
+vpc_id               = "vpc-xxxxxxxxxxxx"
+subnet_public_web_id = "subnet-xxxxxxxxxxxxxx"
 
 # EC2
 key_name                   = "your-ssh-keypair-name"
@@ -16,21 +18,21 @@ ec2_root_block_volume_type = "gp2" # gp2 / io1 / standard
 ec2_root_block_volume_size = "20"
 ec2_ami_type               = "amazon_linux_2023" # Type of AMI to use (amazon_linux_2 or amazon_linux_2023)
 ec2_eip_is_enabled         = 1
-#ec2_ebs_block_volume_type  = "gp2" # gp2 / io1 / standard
-#ec2_ebs_block_volume_size  = "50"
+ec2_ebs_block_volume_type  = "gp2" # gp2 / io1 / standard
+ec2_ebs_block_volume_size  = "50"
 
-# RDS
-aws_db_is_enabled        = 1
-aws_db_instance_type     = "db.t2.micro"
-aws_db_block_volume_type = "gp2" # gp2 / io1 / standard
-aws_db_allocated_storage = "20"  # GB
-aws_db_engine            = "mysql"
-aws_db_engine_version    = "5.7.30"
-aws_db_port              = "3306"
-aws_db_name              = "" # Set this, if create db
-aws_db_username          = "set-db_admin"
-aws_db_password          = "set-db_password"
+## RDS
+#aws_db_is_enabled        = 1
+#aws_db_instance_type     = "db.t2.micro"
+#aws_db_block_volume_type = "gp2" # gp2 / io1 / standard
+#aws_db_allocated_storage = "20"  # GB
+#aws_db_engine            = "mysql"
+#aws_db_engine_version    = "5.7.30"
+#aws_db_port              = "3306"
+#aws_db_name              = "" # Set this, if create db
+#aws_db_username          = "set-db_admin"
+#aws_db_password          = "set-db_password"
 
 # APP Deploy
-app_is_enabled = 0
+app_is_enabled = 1 # if set 1, you need to set ec2_eip_is_enabled = 1
 

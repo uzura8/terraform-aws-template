@@ -8,8 +8,8 @@ variable "ec2_ami_type" {}
 variable "ec2_eip_is_enabled" {}
 variable "ec2_root_block_volume_type" {}
 variable "ec2_root_block_volume_size" {}
-#variable "ec2_ebs_block_volume_type" {}
-#variable "ec2_ebs_block_volume_size" {}
+variable "ec2_ebs_block_volume_type" {}
+variable "ec2_ebs_block_volume_size" {}
 #variable "public_key_value" {}
 
 #resource "aws_key_pair" "key_pair" {
@@ -136,13 +136,13 @@ resource "aws_instance" "web1" {
     ManagedBy = "terraform"
   }
 
-  #ebs_block_device {
-  #  device_name = "/dev/sdf"
-  #  volume_type = var.ec2_ebs_block_volume_type
-  #  volume_size = var.ec2_ebs_block_volume_size
-  #}
+  ebs_block_device {
+    device_name = "/dev/sdf"
+    volume_type = var.ec2_ebs_block_volume_type
+    volume_size = var.ec2_ebs_block_volume_size
+  }
 
-  #user_data = file("bin/ec2_userdata.sh")
+  user_data = file("bin/ec2_userdata.sh")
 }
 
 # EIP
